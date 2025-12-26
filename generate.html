@@ -1,0 +1,24 @@
+<!-- Simpan sebagai generator.html -->
+<!DOCTYPE html>
+<html>
+<body>
+    <h3>Generator Link Tersembunyi</h3>
+    <p>Masukkan Link Download Asli:</p>
+    <input type="text" id="rawLink" placeholder="https://..." style="width: 300px;">
+    <button onclick="generate()">Buat Link</button>
+    <br><br>
+    
+    <p>Copy parameter ini untuk URL Player:</p>
+    <textarea id="result" style="width: 300px; height: 50px;"></textarea>
+
+    <script>
+        function generate() {
+            let link = document.getElementById('rawLink').value;
+            if(!link) return alert("Isi link dulu!");
+            // Mengubah link menjadi kode Base64
+            let encoded = btoa(link); 
+            document.getElementById('result').value = "?key=" + encoded;
+        }
+    </script>
+</body>
+</html>
