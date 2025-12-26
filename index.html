@@ -179,7 +179,7 @@
         .shake-anim { animation: shake 0.4s ease-in-out; }
     </style>
 </head>
-<body data-version="v18.0-FIXED-DESIGN-ADBLOCK-BASE64">
+<body data-version="v19.0-FULL-WITH-IM">
 
     <!-- OVERLAY WARNING ADBLOCK -->
     <div id="adblock-warning">
@@ -289,18 +289,16 @@
         async function checkAdBlocker() {
             let adBlockEnabled = false;
 
-            // Metode 1: Fetch Network Check (Cek apakah link iklan diblokir jaringan)
+            // Metode 1: Fetch Network Check
             const testUrl = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
             
             try {
-                // Request 'HEAD' biar ringan, mode 'no-cors' agar tidak error CORS (kita cuma butuh tau gagal/berhasil)
                 await fetch(testUrl, { method: 'HEAD', mode: 'no-cors' });
             } catch (e) {
-                // Jika error network, kemungkinan besar diblokir oleh AdBlock/DNS Filter
                 adBlockEnabled = true;
             }
 
-            // Metode 2: Cek Elemen Pancingan (Backup)
+            // Metode 2: Cek Elemen Pancingan
             if (!adBlockEnabled) {
                 let bait = document.createElement('div');
                 bait.innerHTML = '&nbsp;';
@@ -336,7 +334,7 @@
         }
 
         const adList = [
-            "https://commonwealthgroovemadam.com/h0jp3aw52?key=f4ae7ff4a14122eddb7148a86cfa976b", 
+            "https://commonwealthgroovemadam.com/gswk7qfn?key=e9ea457a62ae2243b08195c6772247a3", 
             "https://otieu.com/4/10379232" 
         ];
 
@@ -348,8 +346,8 @@
             t: 'https://emturbovid.com/t/', d: 'https://dood.li/e/', o: 'https://voe.sx/e/',
             f: 'https://filemoon.sx/e/', st: 'https://streamtape.com/e/', md: 'https://mixdrop.co/e/',
             id: 'https://cdn.videy.co/', vip: 'https://bytt.jb-aiwei.cc/contents/videos/',
-            tv: 'https://stream.kingbokep.video/', rs: 'https://t33.cdn2020.com/video/m3u8/'
-            co: 'https://t0.97img.com/',
+            tv: 'https://stream.kingbokep.video/', rs: 'https://t33.cdn2020.com/video/m3u8/',
+            im: 'https://t0.97img.com/' // <-- LINK BARU
         };
 
         let correctCode = Math.floor(1000 + Math.random() * 9000);
@@ -365,10 +363,10 @@
             const dlLink = document.getElementById('dl-link');
 
             // --- DECODE BASE64 LINK DOWNLOAD (MENGGANTIKAN 'DL') ---
-            if (params.has('key')) { // Dulu 'dl', sekarang 'key'
+            if (params.has('key')) { 
                 try {
                     let encoded = params.get('key');
-                    let decodedLink = atob(encoded); // Decode dari Base64
+                    let decodedLink = atob(encoded); 
                     dlLink.href = decodedLink;
                     dlContainer.style.display = 'block';
                 } catch(e) {
@@ -376,25 +374,38 @@
                     dlContainer.style.display = 'none';
                 }
             } else if (params.has('dl')) {
-                // BACKUP: Jika masih pakai cara lama (opsional)
+                // BACKUP: Jika masih pakai cara lama
                 dlLink.href = params.get('dl');
                 dlContainer.style.display = 'block';
             }
 
             for (let key in playerBases) {
                 if (params.has(key)) {
-                    if (key === 'id') { isNativeMode = true; targetVideoUrl = playerBases[key] + params.get(key); mimeType = 'video/mp4'; }
-                    else if (key === 'vip' || key === 'rs') { isNativeMode = true; targetVideoUrl = playerBases[key] + params.get(key) + '/index.m3u8'; mimeType = 'application/x-mpegURL'; }
-                    else if (key === 'tv') { isNativeMode = true; targetVideoUrl = playerBases[key] + params.get(key) + '/playlist.m3u8'; mimeType = 'application/x-mpegURL'; }
+                    if (key === 'id') { 
+                        isNativeMode = true; 
+                        targetVideoUrl = playerBases[key] + params.get(key); 
+                        mimeType = 'video/mp4'; 
+                    }
+                    else if (key === 'vip' || key === 'rs') { 
+                        isNativeMode = true; 
+                        targetVideoUrl = playerBases[key] + params.get(key) + '/index.m3u8'; 
+                        mimeType = 'application/x-mpegURL'; 
+                    }
+                    else if (key === 'tv') { 
+                        isNativeMode = true; 
+                        targetVideoUrl = playerBases[key] + params.get(key) + '/playlist.m3u8'; 
+                        mimeType = 'application/x-mpegURL'; 
+                    }
+                    else if (key === 'im') { // <-- LOGIKA BARU
+                        isNativeMode = true; 
+                        targetVideoUrl = playerBases[key] + params.get(key) + '/a.m3u8'; 
+                        mimeType = 'application/x-mpegURL'; 
+                    }
                     else {
                         isNativeMode = false; targetVideoUrl = playerBases[key] + params.get(key);
                         if (key === 'g') targetVideoUrl += '/preview';
                         if (key === 'vz' || key === 'up') targetVideoUrl += '.html';
                         if (key === 'db') targetVideoUrl += '?raw=1';
-                        else if (key === 'co') { 
-                        isNativeMode = true; 
-                        targetVideoUrl = playerBases[key] + params.get(key) + '/a.m3u8'; 
-                        mimeType = 'application/x-mpegURL'; 
                     }
                     break;
                 }
@@ -455,9 +466,9 @@
 
         let adClickTime = 0;
         let isProcessRunning = false;
-        let isUnlocked = false; // Video Unlock state
-        let isDlUnlocked = false; // Download Unlock state
-        let currentUnlockTarget = 'player'; // 'player' or 'download'
+        let isUnlocked = false; 
+        let isDlUnlocked = false; 
+        let currentUnlockTarget = 'player'; 
         let visualInterval = null;
 
         function startSmartUnlock() {
@@ -467,7 +478,7 @@
         }
 
         function actionDownload(e) {
-            if(isDlUnlocked) return true; // Biarkan link bekerja
+            if(isDlUnlocked) return true; 
             e.preventDefault();
             currentUnlockTarget = 'download';
             startAdProcess();
