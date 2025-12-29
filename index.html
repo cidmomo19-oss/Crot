@@ -4,16 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Videy Premium</title>
-    
+
     <!-- === LOGO CONFIGURATION === -->
     <link rel="icon" href="https://i.ibb.co.com/SpVMhDf/Picsart-25-12-18-16-27-03-730-2.jpg" sizes="32x32" type="image/jpeg">
-    <link rel="apple-touch-icon" href="https://i.ibb.co.com/SpVMhDf/Picsart-25-12-18-16-27-03-730-2.jpg">
-    
     <meta property="og:type" content="video.movie" />
     <meta property="og:title" content="Videy Premium Player" />
     <meta property="og:description" content="Tonton video premium tanpa gangguan." />
     <meta property="og:image" content="https://i.ibb.co.com/SpVMhDf/Picsart-25-12-18-16-27-03-730-2.jpg" />
-    
+
     <!-- LIBRARY -->
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
@@ -61,12 +59,12 @@
             margin-top: 10px;
         }
 
-        /* PLAYER CONTAINER */
+        /* PLAYER CONTAINER - NO SHADOW */
         .player-container {
             width: 100%; aspect-ratio: 16 / 9;
             background: #000; border-radius: 12px; 
             overflow: hidden; position: relative; 
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            box-shadow: none; 
             z-index: 20;
         }
         
@@ -97,12 +95,10 @@
         }
         .btn-unlock:disabled { background: #334155; color: #94a3b8; cursor: not-allowed; }
 
-        /* OVERLAY ADBLOCK DETECTED */
+        /* OVERLAY ADBLOCK */
         #adblock-warning {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #0f172a; 
-            z-index: 99999; 
-            display: none; 
+            background: #0f172a; z-index: 99999; display: none; 
             flex-direction: column; align-items: center; justify-content: center;
             text-align: center; padding: 20px;
         }
@@ -116,47 +112,53 @@
         }
         .btn-refresh:active { transform: scale(0.95); }
 
-        /* --- TOMBOL THEME (LOGIKA ICON OTOMATIS) --- */
-        #theme-btn-player {
-            position: absolute; top: 10px; right: 10px; z-index: 60; 
-            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(4px);
-            color: #fff; border: 1px solid rgba(255,255,255,0.1);
-            width: 32px; height: 32px; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-        }
-        
-        /* BOTTOM TOOLS CONTAINER (NEW) */
-        #bottom-tools {
+        /* --- TOOLBAR --- */
+        #tools-container {
             width: 100%;
-            display: none; /* Sembunyi dulu */
-            justify-content: flex-start; /* Pojok Kiri */
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            gap: 5px; 
             margin-top: 12px;
-            animation: fadeIn 0.5s ease;
+            z-index: 30;
         }
 
-        .btn-theme-bottom {
-            background: #ffffff; border: 1px solid #cbd5e1;
-            color: #0f172a; padding: 8px 14px; border-radius: 8px;
-            cursor: pointer; display: flex; align-items: center; gap: 8px;
-            font-size: 12px; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        .btn-icon-only {
+            width: 42px; height: 42px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #0f172a;
             transition: all 0.2s;
+            box-shadow: none !important; /* SHADOW DIHAPUS DISINI */
+            text-decoration: none; 
         }
         
-        /* Dark Mode Styles untuk Tombol Bawah */
-        body.dark-mode .btn-theme-bottom {
+        body.dark-mode .btn-icon-only {
             background: #1e293b; border-color: #334155; color: #f8fafc;
         }
 
-        /* ICON SWITCHER LOGIC (CSS ONLY) */
-        /* Default (Light Mode): Sun sembunyi, Moon muncul */
+        .btn-icon-only:hover { transform: translateY(-2px); }
+        
+        /* ANIMASI KLIK (BOUNCE) */
+        @keyframes clickBounce {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.8); }
+            100% { transform: scale(1); }
+        }
+        .animate-click {
+            animation: clickBounce 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .btn-icon-only.unlocked { color: #22c55e; border-color: #22c55e; }
+
+        /* ICON SWITCHER LOGIC */
         .icon-sun { display: none; }
         .icon-moon { display: block; }
-
-        /* Dark Mode: Sun muncul, Moon sembunyi */
         body.dark-mode .icon-sun { display: block; }
         body.dark-mode .icon-moon { display: none; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
         #device-msg { transition: all 0.5s ease; width: 100%; display: flex; justify-content: center; margin-bottom: 15px; }
         .device-badge { 
@@ -175,18 +177,13 @@
 
         .clean-on-play { transition: opacity 0.5s ease; }
 
-        #dl-container { width: 100%; margin-top: 15px; display: none; }
-        .btn-download-primary { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: #2563eb; color: white; padding: 14px; border-radius: 12px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); transition: all 0.3s; cursor: pointer; }
-        .btn-download-primary.locked { background: #334155; }
-        .btn-download-primary.unlocked { background: #22c55e; }
-
-        /* PERBAIKAN TOMBOL LAPOR / WHATSAPP */
+        /* CONTACT LINK */
         .contact-link { 
             margin-top: 12px; width: 100%; 
             font-size: 13px; color: #0f172a; 
             background: #f1f5f9; padding: 12px; 
             border-radius: 12px; border: 1px solid #cbd5e1; 
-            display: flex; flex-direction: row; /* Pastikan baris */
+            display: flex; flex-direction: row; 
             align-items: center; justify-content: center; 
             gap: 10px; text-decoration: none; 
             transition: all 0.3s ease; font-weight: 600; 
@@ -204,486 +201,405 @@
         .shake-anim { animation: shake 0.4s ease-in-out; }
     </style>
 </head>
-<body data-version="v20.0-BOTTOM-THEME">
+<body data-version="v21.0-ICON-TOOLS">
 
-    <!-- OVERLAY WARNING ADBLOCK -->
-    <div id="adblock-warning">
-        <svg class="ab-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-        </svg>
-        <div class="ab-title">AdBlock Terdeteksi</div>
-        <p class="ab-desc">
-            Sistem kami mendeteksi Pemblokir Iklan aktif.<br>
-            Server kami gratis karena iklan. Mohon matikan AdBlock Anda untuk melanjutkan.
+<!-- OVERLAY WARNING ADBLOCK -->
+<div id="adblock-warning">
+    <svg class="ab-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+    </svg>
+    <div class="ab-title">AdBlock Terdeteksi</div>
+    <p class="ab-desc">
+        Sistem kami mendeteksi Pemblokir Iklan aktif.<br>
+        Server kami gratis karena iklan. Mohon matikan AdBlock Anda untuk melanjutkan.
+    </p>
+    <button class="btn-refresh" onclick="location.reload()">SAYA SUDAH MATIKAN</button>
+</div>
+
+<!-- IKLAN ATAS -->
+<div id="social-bar-wrapper" class="clean-on-play">
+    <script type='text/javascript' src='//commonwealthgroovemadam.com/d8/73/50/d87350f60caa61205cfd0d5c55df9e33.js'></script>
+</div>
+
+<!-- KARTU VERIFIKASI -->
+<div id="verify-screen" class="verify-card">
+    <h2 class="text-xl font-bold text-gray-900 mb-1">Verifikasi</h2>
+    <p class="text-gray-500 text-xs mb-4">Masukkan kode akses video.</p>
+    <p id="error-msg">Kode salah!</p>
+    <div class="code-display" id="display-code">----</div>
+    <input type="tel" id="user-input" placeholder="____" maxlength="4">
+    <button onclick="checkCode()" class="btn-verify">Konfirmasi</button>
+</div>
+
+<div id="content-wrapper">
+
+<!-- INFO BADGE -->
+<div id="device-msg" class="clean-on-play hidden">
+    <div class="device-badge">
+        <p class="text-[10px] text-red-600 uppercase tracking-wider font-bold mb-1 flex items-center justify-center gap-1">
+            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            INFORMASI
         </p>
-        <button class="btn-refresh" onclick="location.reload()">SAYA SUDAH MATIKAN</button>
+        <p class="text-xs text-gray-600 leading-snug">
+            Video mungkin sudah di kompres agar admin ga boros kuota. <br>
+            <b>Tips HD:</b> Jangan gunakan layar penuh (Fullscreen).
+        </p>
     </div>
+</div>
 
-    <!-- IKLAN ATAS -->
-    <div id="social-bar-wrapper" class="clean-on-play">
-        <script type='text/javascript' src='//commonwealthgroovemadam.com/d8/73/50/d87350f60caa61205cfd0d5c55df9e33.js'></script>
-    </div>
-
-    <!-- KARTU VERIFIKASI -->
-    <div id="verify-screen" class="verify-card">
-        <h2 class="text-xl font-bold text-gray-900 mb-1">Verifikasi</h2>
-        <p class="text-gray-500 text-xs mb-4">Masukkan kode akses video.</p>
-        <p id="error-msg">Kode salah!</p>
-        <div class="code-display" id="display-code">----</div>
-        <input type="tel" id="user-input" placeholder="____" maxlength="4">
-        <button onclick="checkCode()" class="btn-verify">Konfirmasi</button>
-    </div>
-
-    <div id="content-wrapper">
-        
-        <!-- INFO BADGE -->
-        <div id="device-msg" class="clean-on-play hidden">
-            <div class="device-badge">
-                <p class="text-[10px] text-red-600 uppercase tracking-wider font-bold mb-1 flex items-center justify-center gap-1">
-                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    INFORMASI
-                </p>
-                <p class="text-xs text-gray-600 leading-snug">
-                    Video mungkin sudah di kompres agar admin ga boros kuota. <br>
-                    <b>Tips HD:</b> Jangan gunakan layar penuh (Fullscreen).
-                </p>
+<div class="player-container">
+    <!-- OVERLAY LOCKER -->
+    <div id="ad-overlay-locker">
+        <div class="locker-content">
+            <div class="icon-circle">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
             </div>
-        </div>
-        
-        <div class="player-container">
-            <!-- TOMBOL THEME (SEMENTARA, AKAN HILANG SAAT UNLOCK) -->
-            <button id="theme-btn-player" onclick="toggleTheme()" title="Ganti Mode">
-                <svg class="icon-moon" style="width:18px;height:18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                <svg class="icon-sun" style="width:18px;height:18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <div class="locker-title">Konten Terkunci</div>
+            <div class="locker-desc">
+                Klik tombol di bawah dan tetap berada di halaman sponsor selama <b>8 detik</b> untuk membuka akses.
+            </div>
+            <button class="btn-unlock" onclick="startSmartUnlock()">
+                <span>BUKA AKSES (8s)</span>
             </button>
-
-            <!-- OVERLAY LOCKER -->
-            <div id="ad-overlay-locker">
-                <div class="locker-content">
-                    <div class="icon-circle">
-                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                    </div>
-                    <div class="locker-title">Konten Terkunci</div>
-                    <div class="locker-desc">
-                        Klik tombol di bawah dan tetap berada di halaman sponsor selama <b>8 detik</b> untuk membuka akses.
-                    </div>
-                    <button class="btn-unlock" onclick="startSmartUnlock()">
-                        <span>BUKA AKSES (8s)</span>
-                    </button>
-                    <div id="status-box" class="status-box"></div>
-                </div>
-            </div>
-
-            <div id="embed-mount" style="width:100%; height:100%;"></div>
-
-            <div id="native-player-wrapper">
-                <video id="player" playsinline controls>
-                    <source src="" type="" />
-                </video>
-            </div>
-        </div>
-
-        <!-- NEW: TOMBOL TEMA DI BAWAH PLAYER (POJOK KIRI) -->
-        <div id="bottom-tools">
-            <button class="btn-theme-bottom" onclick="toggleTheme()">
-                <!-- Ikon dikontrol lewat CSS (class icon-sun / icon-moon) -->
-                <svg class="icon-moon" style="width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                <svg class="icon-sun" style="width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                <span>Ganti Mode</span>
-            </button>
-        </div>
-
-        <div id="clean-ui-area" class="clean-on-play w-full flex flex-col items-center">
-            
-            <div id="dl-container">
-                <a href="#" id="dl-link" target="_blank" class="btn-download-primary" onclick="actionDownload(event)">
-                    <svg style="width:20px;height:20px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    <span id="dl-text">Download Video Ini (Terkunci)</span>
-                    <svg id="dl-lock-icon" style="width:16px;height:16px;margin-left:5px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                </a>
-            </div>
-
-            <a href="https://wa.me/6285126450524" target="_blank" class="contact-link">
-                <svg style="width:24px; height:24px; min-width:24px;" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zM12.05 20.21c-1.5 0-2.97-.39-4.27-1.14l-.3-.18-3.14.83.84-3.07-.19-.31a8.12 8.12 0 01-1.25-4.42c0-4.48 3.64-8.13 8.12-8.13 2.17 0 4.21.85 5.75 2.38 1.53 1.54 2.38 3.58 2.38 5.75 0 4.48-3.64 8.13-8.12 8.13zm4.44-6.08c-.24-.12-1.44-.71-1.66-.79-.22-.08-.39-.12-.54.12-.16.24-.61.77-.75.93-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.95-1.21-.72-.65-1.21-1.45-1.35-1.69-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.46-.4-.4-.54-.4h-.46c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.02s.87 2.34.99 2.5c.12.16 1.71 2.61 4.15 3.66 1.62.7 2.24.75 3.04.63.89-.13 2.11-.86 2.41-1.69.29-.83.29-1.54.2-1.69-.08-.15-.29-.24-.53-.36z"/></svg>
-                <span>Lapor Masalah / Request Video</span>
-            </a>
-
-            <div id="native-ad-wrapper">
-                <script async="async" data-cfasync="false" src="https://commonwealthgroovemadam.com/2259c8961aeea898328fa2ef52a93ed9/invoke.js"></script>
-                <div id="container-2259c8961aeea898328fa2ef52a93ed9"></div>
-            </div>
-
+            <div id="status-box" class="status-box"></div>
         </div>
     </div>
 
-    <script>
-        // --- 1. SUPER AGGRESSIVE ADBLOCK DETECTOR (NETWORK CHECK) ---
-        async function checkAdBlocker() {
-            let adBlockEnabled = false;
+    <div id="embed-mount" style="width:100%; height:100%;"></div>
 
-            // Metode 1: Fetch Network Check
-            const testUrl = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-            
+    <div id="native-player-wrapper">
+        <video id="player" playsinline controls>
+            <source src="" type="" />
+        </video>
+    </div>
+</div>
+
+<!-- TOOLS CONTAINER -->
+<div id="tools-container">
+    <!-- Tombol Ganti Mode -->
+    <button class="btn-icon-only" onclick="toggleTheme()" title="Ganti Mode">
+        <svg class="icon-moon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        <svg class="icon-sun" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+    </button>
+    
+    <!-- Tombol Download (DIRECT & HIDDEN UNTIL UNLOCKED) -->
+    <!-- Memicu function triggerDlAnim saat diklik -->
+    <a href="#" id="dl-link" target="_blank" class="btn-icon-only" onclick="actionDownloadWithAnim(event)" style="display: none;" title="Download Video">
+        <svg style="width:20px;height:20px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+    </a>
+</div>
+
+<div id="clean-ui-area" class="clean-on-play w-full flex flex-col items-center">
+    
+    <!-- Tombol WhatsApp -->
+    <a href="https://wa.me/6285126450524" target="_blank" class="contact-link">
+        <svg style="width:24px; height:24px;" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+        </svg>
+        <span>Lapor Masalah / Request Video</span>
+    </a>
+
+    <div id="native-ad-wrapper">
+        <script async="async" data-cfasync="false" src="https://commonwealthgroovemadam.com/2259c8961aeea898328fa2ef52a93ed9/invoke.js"></script>
+        <div id="container-2259c8961aeea898328fa2ef52a93ed9"></div>
+    </div>
+
+</div>
+</div>
+
+<script>
+    // --- 1. ADBLOCK DETECTOR ---
+    async function checkAdBlocker() {
+        let adBlockEnabled = false;
+        const testUrl = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+        try { await fetch(testUrl, { method: 'HEAD', mode: 'no-cors' }); } catch (e) { adBlockEnabled = true; }
+        if (!adBlockEnabled) {
+            let bait = document.createElement('div');
+            bait.innerHTML = '&nbsp;'; bait.className = 'adsbox ad-banner';
+            bait.style.position = 'absolute'; bait.style.top = '-1000px'; bait.style.left = '-1000px'; bait.style.height = '1px';
+            document.body.appendChild(bait);
+            window.setTimeout(function() {
+                if (bait.offsetHeight === 0 || window.getComputedStyle(bait).display === 'none') { showAdBlockWarning(); }
+                bait.remove();
+            }, 100);
+        } else { showAdBlockWarning(); }
+    }
+
+    function showAdBlockWarning() {
+        document.getElementById('adblock-warning').style.display = 'flex';
+        document.body.style.overflow = 'hidden'; 
+    }
+
+    window.onload = function() { checkAdBlocker(); };
+    
+    // --- ANIMASI KLIK DOWNLOAD (DELAY REDIRECT) ---
+    function actionDownloadWithAnim(e) {
+        // 1. Cegah pindah halaman langsung
+        e.preventDefault();
+        
+        const btn = e.currentTarget;
+        const targetUrl = btn.href;
+
+        // 2. Jalankan animasi CSS
+        btn.classList.add('animate-click');
+
+        // 3. Tunggu animasi selesai (300ms) baru pindah halaman
+        setTimeout(() => {
+            btn.classList.remove('animate-click');
+            // Buka link di tab baru secara manual
+            if (targetUrl && targetUrl !== "#") {
+                window.open(targetUrl, '_blank');
+            }
+        }, 300); // 300ms delay sesuai durasi animasi
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+    }
+
+    const adList = [
+        "https://commonwealthgroovemadam.com/h0jp3aw52?key=f4ae7ff4a14122eddb7148a86cfa976b", 
+        "https://otieu.com/4/10379232" 
+    ];
+
+    let currentAdIndex = Math.floor(Math.random() * adList.length);
+    const REQUIRED_DURATION = 8; 
+
+    const playerBases = {
+        h: 'https://short.icu/', s: 'https://gradehgplus.com/e/', v: 'https://vidhidepre.com/v/',
+        t: 'https://emturbovid.com/t/', d: 'https://dood.li/e/', o: 'https://voe.sx/e/',
+        f: 'https://filemoon.sx/e/', st: 'https://streamtape.com/e/', md: 'https://mixdrop.co/e/',
+        id: 'https://cdn.videy.co/', vip: 'https://bytt.jb-aiwei.cc/contents/videos/',
+        tv: 'https://stream.kingbokep.video/', rs: 'https://t33.cdn2020.com/video/m3u8/',
+        im: 'https://t0.97img.com/'
+    };
+
+    let correctCode = Math.floor(1000 + Math.random() * 9000);
+    document.getElementById('display-code').innerText = correctCode;
+
+    let targetVideoUrl = "";
+    let isNativeMode = false;
+    let mimeType = "";
+
+    (function initVideoLogic() {
+        const params = new URLSearchParams(window.location.search);
+        const dlLink = document.getElementById('dl-link');
+
+        // --- DECODE BASE64 LINK DOWNLOAD ---
+        if (params.has('key')) { 
             try {
-                await fetch(testUrl, { method: 'HEAD', mode: 'no-cors' });
-            } catch (e) {
-                adBlockEnabled = true;
-            }
-
-            // Metode 2: Cek Elemen Pancingan
-            if (!adBlockEnabled) {
-                let bait = document.createElement('div');
-                bait.innerHTML = '&nbsp;';
-                bait.className = 'adsbox ad-banner';
-                bait.style.position = 'absolute'; bait.style.top = '-1000px'; bait.style.left = '-1000px'; bait.style.height = '1px';
-                document.body.appendChild(bait);
-                window.setTimeout(function() {
-                    if (bait.offsetHeight === 0 || window.getComputedStyle(bait).display === 'none') {
-                        showAdBlockWarning();
-                    }
-                    bait.remove();
-                }, 100);
-            } else {
-                showAdBlockWarning();
-            }
+                let encoded = params.get('key');
+                let decodedLink = atob(encoded); 
+                dlLink.href = decodedLink;
+            } catch(e) { console.log("Error decoding link"); }
+        } else if (params.has('dl')) {
+            dlLink.href = params.get('dl');
         }
+        // Tombol tetap hidden sampai unlock berhasil
 
-        function showAdBlockWarning() {
-            document.getElementById('adblock-warning').style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // Kunci scroll
-        }
-
-        window.onload = function() {
-            checkAdBlocker();
-        };
-        // ----------------------------------
-
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            // Logika ikon sekarang otomatis via CSS (.icon-sun/.icon-moon)
-        }
-
-        const adList = [
-            "https://commonwealthgroovemadam.com/h0jp3aw52?key=f4ae7ff4a14122eddb7148a86cfa976b", 
-            "https://otieu.com/4/10379232" 
-        ];
-
-        let currentAdIndex = Math.floor(Math.random() * adList.length);
-        const REQUIRED_DURATION = 8; 
-
-        const playerBases = {
-            h: 'https://short.icu/', s: 'https://gradehgplus.com/e/', v: 'https://vidhidepre.com/v/',
-            t: 'https://emturbovid.com/t/', d: 'https://dood.li/e/', o: 'https://voe.sx/e/',
-            f: 'https://filemoon.sx/e/', st: 'https://streamtape.com/e/', md: 'https://mixdrop.co/e/',
-            id: 'https://cdn.videy.co/', vip: 'https://bytt.jb-aiwei.cc/contents/videos/',
-            tv: 'https://stream.kingbokep.video/', rs: 'https://t33.cdn2020.com/video/m3u8/',
-            im: 'https://t0.97img.com/'
-        };
-
-        let correctCode = Math.floor(1000 + Math.random() * 9000);
-        document.getElementById('display-code').innerText = correctCode;
-
-        let targetVideoUrl = "";
-        let isNativeMode = false;
-        let mimeType = "";
-
-        (function initVideoLogic() {
-            const params = new URLSearchParams(window.location.search);
-            const dlContainer = document.getElementById('dl-container');
-            const dlLink = document.getElementById('dl-link');
-
-            // --- DECODE BASE64 LINK DOWNLOAD ---
-            if (params.has('key')) { 
-                try {
-                    let encoded = params.get('key');
-                    let decodedLink = atob(encoded); 
-                    dlLink.href = decodedLink;
-                    dlContainer.style.display = 'block';
-                } catch(e) {
-                    console.log("Error decoding link");
-                    dlContainer.style.display = 'none';
+        for (let key in playerBases) {
+            if (params.has(key)) {
+                if (key === 'id') { 
+                    isNativeMode = true; targetVideoUrl = playerBases[key] + params.get(key); mimeType = 'video/mp4'; 
                 }
-            } else if (params.has('dl')) {
-                dlLink.href = params.get('dl');
-                dlContainer.style.display = 'block';
-            }
-
-            for (let key in playerBases) {
-                if (params.has(key)) {
-                    if (key === 'id') { 
-                        isNativeMode = true; 
-                        targetVideoUrl = playerBases[key] + params.get(key); 
-                        mimeType = 'video/mp4'; 
-                    }
-                    else if (key === 'vip' || key === 'rs') { 
-                        isNativeMode = true; 
-                        targetVideoUrl = playerBases[key] + params.get(key) + '/index.m3u8'; 
-                        mimeType = 'application/x-mpegURL'; 
-                    }
-                    else if (key === 'tv') { 
-                        isNativeMode = true; 
-                        targetVideoUrl = playerBases[key] + params.get(key) + '/playlist.m3u8'; 
-                        mimeType = 'application/x-mpegURL'; 
-                    }
-                    else if (key === 'im') { 
-                        isNativeMode = true; 
-                        targetVideoUrl = playerBases[key] + params.get(key) + '/a.m3u8'; 
-                        mimeType = 'application/x-mpegURL'; 
-                    }
-                    else {
-                        isNativeMode = false; targetVideoUrl = playerBases[key] + params.get(key);
-                        if (key === 'g') targetVideoUrl += '/preview';
-                        if (key === 'vz' || key === 'up') targetVideoUrl += '.html';
-                        if (key === 'db') targetVideoUrl += '?raw=1';
-                    }
-                    break;
+                else if (key === 'vip' || key === 'rs' || key === 'tv' || key === 'im') { 
+                    isNativeMode = true; 
+                    let suffix = (key === 'tv') ? '/playlist.m3u8' : (key === 'im' ? '/a.m3u8' : '/index.m3u8');
+                    targetVideoUrl = playerBases[key] + params.get(key) + suffix; 
+                    mimeType = 'application/x-mpegURL'; 
                 }
+                else {
+                    isNativeMode = false; targetVideoUrl = playerBases[key] + params.get(key);
+                    if (key === 'g') targetVideoUrl += '/preview';
+                    if (key === 'vz' || key === 'up') targetVideoUrl += '.html';
+                    if (key === 'db') targetVideoUrl += '?raw=1';
+                }
+                break;
             }
-        })();
+        }
+    })();
 
-        function loadPlayerBackground() {
-            if (isNativeMode) {
-                document.getElementById('embed-mount').style.display = 'none';
-                document.getElementById('native-player-wrapper').style.display = 'block';
-                const video = document.getElementById('player');
-                if (mimeType === 'application/x-mpegURL') {
-                    if (Hls.isSupported()) {
-                        const hls = new Hls(); hls.loadSource(targetVideoUrl); hls.attachMedia(video);
-                        hls.on(Hls.Events.MANIFEST_PARSED, function() { initPlyr(video); });
-                    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                        video.src = targetVideoUrl; initPlyr(video);
-                    }
-                } else { video.src = targetVideoUrl; initPlyr(video); }
+    function loadPlayerBackground() {
+        if (isNativeMode) {
+            document.getElementById('embed-mount').style.display = 'none';
+            document.getElementById('native-player-wrapper').style.display = 'block';
+            const video = document.getElementById('player');
+            if (mimeType === 'application/x-mpegURL') {
+                if (Hls.isSupported()) {
+                    const hls = new Hls(); hls.loadSource(targetVideoUrl); hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() { initPlyr(video); });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = targetVideoUrl; initPlyr(video);
+                }
+            } else { video.src = targetVideoUrl; initPlyr(video); }
+        } else {
+            const mount = document.getElementById('embed-mount');
+            if (targetVideoUrl) { mount.innerHTML = `<iframe src="${targetVideoUrl}" allowfullscreen allow="autoplay" scrolling="no"></iframe>`; }
+        }
+    }
+
+    function initPlyr(element) {
+        const player = new Plyr(element, {
+            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
+            autoplay: false 
+        });
+
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: document.title,
+                artist: 'Videy Premium',
+                album: 'Premium Player',
+                artwork: [{ src: 'https://i.ibb.co.com/SpVMhDf/Picsart-25-12-18-16-27-03-730-2.jpg', sizes: '512x512', type: 'image/jpeg' }]
+            });
+        }
+        element.pause();
+    }
+
+    function killSocialBar() {
+        const socialAd = document.getElementById('social-bar-wrapper');
+        if(socialAd) socialAd.remove();
+    }
+
+    let adClickTime = 0;
+    let isProcessRunning = false;
+    let isUnlocked = false; 
+    let currentUnlockTarget = 'player'; 
+    let visualInterval = null;
+
+    function startSmartUnlock() {
+        if(isUnlocked) return;
+        currentUnlockTarget = 'player';
+        startAdProcess();
+    }
+
+    function startAdProcess() {
+        window.open(adList[currentAdIndex], '_blank');
+        adClickTime = Date.now();
+        isProcessRunning = true;
+        
+        const btnPlayer = document.querySelector('.btn-unlock');
+        const statusBox = document.getElementById('status-box');
+
+        if(currentUnlockTarget === 'player') {
+            statusBox.style.opacity = '1';
+            statusBox.className = "status-box status-waiting";
+            statusBox.innerHTML = `<svg class="animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>JANGAN TUTUP IKLAN...</span>`;
+            btnPlayer.disabled = true;
+        }
+
+        let timeLeft = REQUIRED_DURATION;
+        if(visualInterval) clearInterval(visualInterval);
+
+        visualInterval = setInterval(() => {
+            if(!isProcessRunning) { clearInterval(visualInterval); return; }
+            const isSplitScreen = (window.innerHeight < (window.screen.height * 0.65));
+            const isHidden = document.hidden;
+
+            let msg = "";
+            let color = "";
+
+            if (!isHidden || isSplitScreen) {
+                adClickTime = Date.now(); timeLeft = REQUIRED_DURATION; 
+                if(isSplitScreen) { msg = "GUNAKAN CHROME!"; color = "#ef4444"; }
+                else { msg = "TUNGGU DI TAB IKLAN..."; color = (currentUnlockTarget === 'player' ? "#0f172a" : "#fff"); }
             } else {
-                const mount = document.getElementById('embed-mount');
-                if (targetVideoUrl) { mount.innerHTML = `<iframe src="${targetVideoUrl}" allowfullscreen allow="autoplay" scrolling="no"></iframe>`; }
-            }
-        }
-
-        function initPlyr(element) {
-            const player = new Plyr(element, {
-                controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
-                autoplay: false 
-            });
-
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: document.title,
-                    artist: 'Videy Premium',
-                    album: 'Premium Player',
-                    artwork: [
-                        { src: 'https://i.ibb.co.com/SpVMhDf/Picsart-25-12-18-16-27-03-730-2.jpg', sizes: '512x512', type: 'image/jpeg' },
-                    ]
-                });
+                timeLeft--; 
+                color = (currentUnlockTarget === 'player' ? "#0f172a" : "#fff");
+                if(timeLeft > 0) { msg = `MEMERIKSA... (${timeLeft})`; }
+                else { msg = "SILAKAN KEMBALI"; }
             }
 
-            const themeBtn = document.getElementById('theme-btn-player');
-            player.on('play', () => { 
-                if(themeBtn && themeBtn.style.display !== 'none') themeBtn.style.display = 'none'; 
-            });
-            player.on('pause', () => { 
-                if(themeBtn && themeBtn.style.display !== 'none') themeBtn.style.display = 'flex'; 
-            });
-
-            element.pause();
-        }
-
-        function killSocialBar() {
-            const socialAd = document.getElementById('social-bar-wrapper');
-            if(socialAd) socialAd.remove();
-        }
-
-        let adClickTime = 0;
-        let isProcessRunning = false;
-        let isUnlocked = false; 
-        let isDlUnlocked = false; 
-        let currentUnlockTarget = 'player'; 
-        let visualInterval = null;
-
-        function startSmartUnlock() {
-            if(isUnlocked) return;
-            currentUnlockTarget = 'player';
-            startAdProcess();
-        }
-
-        function actionDownload(e) {
-            if(isDlUnlocked) return true; 
-            e.preventDefault();
-            currentUnlockTarget = 'download';
-            startAdProcess();
-        }
-
-        function startAdProcess() {
-            window.open(adList[currentAdIndex], '_blank');
-            adClickTime = Date.now();
-            isProcessRunning = true;
-            
-            const btnPlayer = document.querySelector('.btn-unlock');
-            const statusBox = document.getElementById('status-box');
-            
-            const btnDl = document.getElementById('dl-link');
-            const txtDl = document.getElementById('dl-text');
-
-            // Reset Tampilan Error jika ada
             if(currentUnlockTarget === 'player') {
-                statusBox.style.opacity = '1';
-                statusBox.className = "status-box status-waiting";
-                statusBox.innerHTML = `<svg class="animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>JANGAN TUTUP IKLAN...</span>`;
-                btnPlayer.disabled = true;
-            } else {
-                // Untuk tombol download
-                btnDl.classList.add('locked');
+                btnPlayer.style.color = color;
+                btnPlayer.innerHTML = `<span>${msg}</span>`;
             }
+        }, 1000);
+    }
 
-            let timeLeft = REQUIRED_DURATION;
-            if(visualInterval) clearInterval(visualInterval);
+    window.onpageshow = function(event) {
+        if (isProcessRunning) {
+            if (currentUnlockTarget === 'player' && isUnlocked) return;
+            const diffSeconds = Math.floor((Date.now() - adClickTime) / 1000);
+            if (diffSeconds >= (REQUIRED_DURATION - 1)) { handleUserReturn(); return; }
+        }
+        if (event.persisted && isProcessRunning) { handleFailState("back_button"); }
+    };
 
-            visualInterval = setInterval(() => {
-                if(!isProcessRunning) { clearInterval(visualInterval); return; }
-                const isSplitScreen = (window.innerHeight < (window.screen.height * 0.65));
-                const isHidden = document.hidden;
+    function handleUserReturn() {
+        if (document.hidden) return;
+        if (currentUnlockTarget === 'player' && isUnlocked) return;
 
-                let msg = "";
-                let color = "";
+        const isSplitScreen = (window.innerHeight < (window.screen.height * 0.65));
+        if (isSplitScreen && isProcessRunning) { 
+            if(currentUnlockTarget==='player') document.querySelector('.btn-unlock').innerHTML = `<span>GANTI KE CHROME!</span>`; 
+            return; 
+        }
 
-                if (!isHidden || isSplitScreen) {
-                    adClickTime = Date.now(); timeLeft = REQUIRED_DURATION; 
-                    if(isSplitScreen) { msg = "GUNAKAN CHROME!"; color = "#ef4444"; }
-                    else { msg = "TUNGGU DI TAB IKLAN..."; color = (currentUnlockTarget === 'player' ? "#0f172a" : "#fff"); }
-                } else {
-                    timeLeft--; 
-                    color = (currentUnlockTarget === 'player' ? "#0f172a" : "#fff");
-                    if(timeLeft > 0) { msg = `MEMERIKSA... (${timeLeft})`; }
-                    else { msg = "SILAKAN KEMBALI"; }
-                }
+        if (isProcessRunning) {
+            const diffSeconds = Math.floor((Date.now() - adClickTime) / 1000);
+            if (diffSeconds >= (REQUIRED_DURATION - 1)) {
+                isProcessRunning = false; clearInterval(visualInterval);
 
                 if(currentUnlockTarget === 'player') {
-                    btnPlayer.style.color = color;
-                    btnPlayer.innerHTML = `<span>${msg}</span>`;
-                } else {
-                    txtDl.innerText = msg;
-                }
+                    isUnlocked = true;
+                    document.getElementById('status-box').className = "status-box status-success"; 
+                    document.getElementById('status-box').innerHTML = `<span>Terbuka!</span>`;
+                    const overlay = document.getElementById('ad-overlay-locker');
+                    overlay.style.opacity = '0';
+                    setTimeout(() => { overlay.style.display = 'none'; }, 500);
 
-            }, 1000);
-        }
+                    const cleanArea = document.getElementById('clean-ui-area');
+                    cleanArea.style.opacity = '0'; setTimeout(() => { cleanArea.style.display = 'none'; }, 500);
+                    const infoBadge = document.getElementById('device-msg');
+                    infoBadge.style.opacity = '0'; setTimeout(() => { infoBadge.style.display = 'none'; }, 500);
+                    const topAd = document.getElementById('social-bar-wrapper');
+                    if(topAd) { topAd.style.opacity = '0'; setTimeout(() => { topAd.remove(); }, 500); }
 
-        window.onpageshow = function(event) {
-            if (isProcessRunning) {
-                if (currentUnlockTarget === 'player' && isUnlocked) return;
-                if (currentUnlockTarget === 'download' && isDlUnlocked) return;
-
-                const diffSeconds = Math.floor((Date.now() - adClickTime) / 1000);
-                if (diffSeconds >= (REQUIRED_DURATION - 1)) { handleUserReturn(); return; }
-            }
-            if (event.persisted && isProcessRunning) { handleFailState("back_button"); }
-        };
-
-        function handleUserReturn() {
-            if (document.hidden) return;
-            // Cek kondisi unlocked
-            if (currentUnlockTarget === 'player' && isUnlocked) return;
-            if (currentUnlockTarget === 'download' && isDlUnlocked) return;
-
-            const isSplitScreen = (window.innerHeight < (window.screen.height * 0.65));
-            if (isSplitScreen && isProcessRunning) { 
-                if(currentUnlockTarget==='player') document.querySelector('.btn-unlock').innerHTML = `<span>GANTI KE CHROME!</span>`; 
-                else document.getElementById('dl-text').innerText = "GANTI KE CHROME!";
-                return; 
-            }
-
-            if (isProcessRunning) {
-                const diffSeconds = Math.floor((Date.now() - adClickTime) / 1000);
-                if (diffSeconds >= (REQUIRED_DURATION - 1)) {
-                    // SUKSES
-                    isProcessRunning = false; clearInterval(visualInterval);
-
-                    if(currentUnlockTarget === 'player') {
-                        isUnlocked = true;
-                        document.getElementById('status-box').className = "status-box status-success"; 
-                        document.getElementById('status-box').innerHTML = `<span>Terbuka!</span>`;
-                        
-                        const overlay = document.getElementById('ad-overlay-locker');
-                        overlay.style.opacity = '0';
-                        setTimeout(() => { overlay.style.display = 'none'; }, 500);
-
-                        // === MODE BERSIH ===
-                        // 1. Hapus tombol tema lama (yang di pojok player)
-                        const themeBtn = document.getElementById('theme-btn-player');
-                        if(themeBtn) themeBtn.remove(); 
-
-                        // 2. Tampilkan tombol tema baru (di bawah player)
-                        document.getElementById('bottom-tools').style.display = 'flex';
-
-                        // 3. Bersihkan sisa elemen lain
-                        const cleanArea = document.getElementById('clean-ui-area');
-                        cleanArea.style.opacity = '0'; setTimeout(() => { cleanArea.style.display = 'none'; }, 500);
-                        const infoBadge = document.getElementById('device-msg');
-                        infoBadge.style.opacity = '0'; setTimeout(() => { infoBadge.style.display = 'none'; }, 500);
-                        const topAd = document.getElementById('social-bar-wrapper');
-                        if(topAd) { topAd.style.opacity = '0'; setTimeout(() => { topAd.remove(); }, 500); }
-                    } else {
-                        // DOWNLOAD SUKSES
-                        isDlUnlocked = true;
-                        const dlLink = document.getElementById('dl-link');
-                        const dlText = document.getElementById('dl-text');
-                        const lockIcon = document.getElementById('dl-lock-icon');
-                        
-                        dlLink.classList.remove('locked');
-                        dlLink.classList.add('unlocked');
-                        dlText.innerText = "DOWNLOAD SIAP (KLIK LAGI)";
-                        if(lockIcon) lockIcon.remove();
+                    // --- MUNCULKAN TOMBOL DOWNLOAD JIKA LINK TERSEDIA ---
+                    const dlLink = document.getElementById('dl-link');
+                    if(dlLink.href && dlLink.href !== window.location.href + "#" && dlLink.href !== "") {
+                        dlLink.style.display = 'flex';
                     }
-
-                } else {
-                    handleFailState("too_fast");
                 }
-            }
+
+            } else { handleFailState("too_fast"); }
         }
+    }
 
-        function handleFailState(reason) {
-            isProcessRunning = false; clearInterval(visualInterval); adClickTime = 0;
-            currentAdIndex = (currentAdIndex === 0) ? 1 : 0; 
+    function handleFailState(reason) {
+        isProcessRunning = false; clearInterval(visualInterval); adClickTime = 0;
+        currentAdIndex = (currentAdIndex === 0) ? 1 : 0; 
 
-            if(currentUnlockTarget === 'player') {
-                const btn = document.querySelector('.btn-unlock');
-                const statusBox = document.getElementById('status-box');
-                statusBox.className = "status-box status-fail"; 
-                if(reason === "back_button") statusBox.innerHTML = `<span>Terdeteksi tombol Kembali!</span>`;
-                else statusBox.innerHTML = `<span>Gagal! Kamu kembali terlalu cepat.</span>`;
-                
-                btn.disabled = false; btn.style.background = "#ef4444"; btn.style.color = "white";
-                btn.innerHTML = `<span>ULANGI (8s)</span>`;
-                document.querySelector('.locker-content').classList.add('shake-anim');
-                setTimeout(() => document.querySelector('.locker-content').classList.remove('shake-anim'), 500);
-            } else {
-                // FAIL STATE DOWNLOAD
-                const dlText = document.getElementById('dl-text');
-                const dlLink = document.getElementById('dl-link');
-                dlText.innerText = "GAGAL! ULANGI LAGI (8s)";
-                dlLink.classList.add('locked');
-                
-                dlLink.classList.add('shake-anim');
-                setTimeout(() => dlLink.classList.remove('shake-anim'), 500);
-            }
+        if(currentUnlockTarget === 'player') {
+            const btn = document.querySelector('.btn-unlock');
+            const statusBox = document.getElementById('status-box');
+            statusBox.className = "status-box status-fail"; 
+            statusBox.innerHTML = (reason === "back_button") ? `<span>Terdeteksi tombol Kembali!</span>` : `<span>Gagal! Kamu kembali terlalu cepat.</span>`;
+            btn.disabled = false; btn.style.background = "#ef4444"; btn.style.color = "white";
+            btn.innerHTML = `<span>ULANGI (8s)</span>`;
+            document.querySelector('.locker-content').classList.add('shake-anim');
+            setTimeout(() => document.querySelector('.locker-content').classList.remove('shake-anim'), 500);
         }
+    }
 
-        document.addEventListener("visibilitychange", handleUserReturn);
-        window.addEventListener("focus", handleUserReturn);
+    document.addEventListener("visibilitychange", handleUserReturn);
+    window.addEventListener("focus", handleUserReturn);
 
-        function checkCode() {
-            const val = document.getElementById('user-input').value;
-            if (val == correctCode) {
-                killSocialBar();
-                document.getElementById('verify-screen').style.display = 'none';
-                document.getElementById('content-wrapper').style.display = 'flex';
-                document.getElementById('device-msg').classList.remove('hidden');
-                loadPlayerBackground();
-            } else {
-                document.getElementById('error-msg').style.display = 'block';
-            }
+    function checkCode() {
+        const val = document.getElementById('user-input').value;
+        if (val == correctCode) {
+            killSocialBar();
+            document.getElementById('verify-screen').style.display = 'none';
+            document.getElementById('content-wrapper').style.display = 'flex';
+            document.getElementById('device-msg').classList.remove('hidden');
+            loadPlayerBackground();
+        } else {
+            document.getElementById('error-msg').style.display = 'block';
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
