@@ -1,24 +1,130 @@
-<!-- Simpan sebagai generator.html -->
 <!DOCTYPE html>
-<html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Link Generator - Videy Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f1f5f9; padding: 20px; }
+        .card { background: white; max-width: 600px; margin: 40px auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    </style>
+</head>
 <body>
-    <h3>Generator Link Tersembunyi</h3>
-    <p>Masukkan Link Download Asli:</p>
-    <input type="text" id="rawLink" placeholder="https://..." style="width: 300px;">
-    <button onclick="generate()">Buat Link</button>
-    <br><br>
-    
-    <p>Copy parameter ini untuk URL Player:</p>
-    <textarea id="result" style="width: 300px; height: 50px;"></textarea>
 
-    <script>
-        function generate() {
-            let link = document.getElementById('rawLink').value;
-            if(!link) return alert("Isi link dulu!");
-            // Mengubah link menjadi kode Base64
-            let encoded = btoa(link); 
-            document.getElementById('result').value = "?key=" + encoded;
+<div class="card">
+    <h1 class="text-2xl font-bold mb-6 text-slate-800 text-center">Buat Link Premium</h1>
+
+    <div class="mb-4">
+        <label class="block text-sm font-medium text-slate-700 mb-1">Link Embed / Sumber Video</label>
+        <input type="text" id="embedLink" class="w-full p-3 border border-slate-300 rounded-lg text-sm" placeholder="Contoh: https://videy.co/v?id=xxxxx atau https://short.icu/xxxxx">
+        <p class="text-xs text-slate-500 mt-1">Mendukung: Videy, Short.icu, Vidhide, Dood, dll.</p>
+    </div>
+
+    <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-700 mb-1">Link Download (Opsional)</label>
+        <input type="text" id="dlLink" class="w-full p-3 border border-slate-300 rounded-lg text-sm" placeholder="https://mediafire.com/file/...">
+    </div>
+
+    <button onclick="generateLink()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">BUAT LINK</button>
+
+    <div id="resultArea" class="hidden mt-6 pt-6 border-t border-slate-200">
+        <label class="block text-sm font-medium text-slate-700 mb-1">Hasil Link:</label>
+        <div class="flex gap-2">
+            <input type="text" id="finalLink" readonly class="w-full p-3 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-600">
+            <button onclick="copyLink()" class="bg-slate-800 text-white px-4 rounded-lg font-medium text-sm">Copy</button>
+        </div>
+        <a id="previewBtn" href="#" target="_blank" class="block text-center text-blue-600 text-sm mt-3 hover:underline">Coba Link</a>
+    </div>
+</div>
+
+<script>
+    // Konfigurasi prefix sesuai script player utama
+    const playerConfig = [
+        { key: 'h', base: 'short.icu/' },
+        { key: 's', base: 'gradehgplus.com/e/' },
+        { key: 'v', base: 'vidhidepre.com/v/' },
+        { key: 't', base: 'emturbovid.com/t/' },
+        { key: 'd', base: 'dood.li/e/' },
+        { key: 'o', base: 'voe.sx/e/' },
+        { key: 'f', base: 'filemoon.sx/e/' },
+        { key: 'st', base: 'streamtape.com/e/' },
+        { key: 'md', base: 'mixdrop.co/e/' },
+        { key: 'id', base: 'videy.co/v?id=' }, // Menangani format videy
+        { key: 'id', base: 'cdn.videy.co/' },
+        { key: 'vip', base: 'bytt.jb-aiwei.cc/contents/videos/' },
+        { key: 'tv', base: 'stream.kingbokep.video/' },
+        { key: 'rs', base: 't33.cdn2020.com/video/m3u8/' },
+        { key: 'im', base: 't0.97img.com/' }
+    ];
+
+    function generateLink() {
+        const embedUrl = document.getElementById('embedLink').value.trim();
+        const dlUrl = document.getElementById('dlLink').value.trim();
+        
+        if (!embedUrl) { alert("Masukkan Link Embed dulu!"); return; }
+
+        let paramKey = '';
+        let paramVal = '';
+
+        // Cari tipe player
+        let found = false;
+        for (let cfg of playerConfig) {
+            if (embedUrl.includes(cfg.base)) {
+                // Logic khusus untuk videy ?id=
+                if (embedUrl.includes('id=')) {
+                    paramKey = 'id';
+                    paramVal = embedUrl.split('id=')[1].split('&')[0];
+                } else {
+                    // Logic umum: ambil ID setelah base URL
+                    // Hapus protocol
+                    let cleanUrl = embedUrl.replace(/^https?:\/\//, '');
+                    let cleanBase = cfg.base.replace(/^https?:\/\//, '');
+                    
+                    if(cleanUrl.includes(cleanBase)) {
+                        let afterBase = cleanUrl.split(cleanBase)[1];
+                        // Bersihkan suffix jika ada (misal .html atau /playlist.m3u8)
+                        paramVal = afterBase.replace('/preview', '').replace('.html', '').replace('/playlist.m3u8', '').replace('/index.m3u8', '').replace('/a.m3u8', '').replace('?raw=1', '');
+                        paramKey = cfg.key;
+                    }
+                }
+                found = true;
+                break;
+            }
         }
-    </script>
+
+        if (!found) {
+            // Fallback: Jika tidak dikenali, anggap videy ID jika pendek, atau error
+             alert("Format link video tidak dikenali otomatis. Pastikan link sesuai support player.");
+             return;
+        }
+
+        // Base URL Website Anda (GANTI INI JIKA SUDAH ONLINE)
+        // Jika file ini satu folder dengan player, bisa pakai ./
+        // Tapi untuk copy link, sebaiknya domain penuh.
+        let domain = window.location.href.substring(0, window.location.href.lastIndexOf("/")) + "/index.html";
+        
+        let finalUrl = `${domain}?${paramKey}=${paramVal}`;
+
+        if (dlUrl) {
+            // Encode Download Link ke Base64 (btoa)
+            const encodedDl = btoa(dlUrl);
+            finalUrl += `&key=${encodedDl}`;
+        }
+
+        document.getElementById('finalLink').value = finalUrl;
+        document.getElementById('previewBtn').href = finalUrl;
+        document.getElementById('resultArea').classList.remove('hidden');
+    }
+
+    function copyLink() {
+        const copyText = document.getElementById("finalLink");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+        alert("Link berhasil disalin!");
+    }
+</script>
+
 </body>
 </html>
