@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Videy Premium</title>
 
+    <!-- === KONFIGURASI WARNA STATUS BAR (INIT) === -->
+    <meta name="theme-color" id="meta-theme" content="#f8fafc">
+
     <!-- === LOGO CONFIGURATION === -->
     <link rel="icon" href="https://i.ibb.co.com/SpVMhDf/Picsart-25-12-18-16-27-03-730-2.jpg" sizes="32x32" type="image/jpeg">
     <meta property="og:type" content="video.movie" />
@@ -38,26 +41,32 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* DARK MODE */
+        /* --- DARK MODE CONFIGURATION (FIXED TEXT) --- */
         body.dark-mode { background-color: #050505; color: #e5e5e5; }
-        body.dark-mode .verify-card { background-color: #121212; border-color: #262626; box-shadow: 0 4px 20px -1px rgba(0, 0, 0, 0.9); }
-        body.dark-mode h2, body.dark-mode h3 { color: #ffffff; }
-        body.dark-mode .text-gray-500, body.dark-mode .text-gray-600 { color: #a3a3a3; }
-        body.dark-mode .code-display { background-color: #1f1f1f; color: #ffffff; border: 1px solid #333; }
-        body.dark-mode input[type="tel"] { background-color: #0a0a0a; border-color: #404040; color: #fff; }
-        body.dark-mode .btn-verify { background-color: #ffffff; color: #000000; }
         body.dark-mode .device-badge { background: #2b0b0b; border-color: #450a0a; }
         
-        /* Modal Dark Mode */
+        /* Modal Dark Mode Fixes */
         body.dark-mode .wa-modal-content { background-color: #1e1e1e; border-color: #333; color: #fff; }
+        body.dark-mode .wa-modal-content h3 { color: #ffffff; } /* Judul Modal Putih */
+        
         body.dark-mode .step-num { background: #333; color: #fff; }
-        body.dark-mode .step-text { color: #ccc; }
+        body.dark-mode .step-text { color: #d1d5db; } /* Teks step abu terang */
+        body.dark-mode .step-text strong { color: #ffffff; } /* Teks tebal putih */
+        
         body.dark-mode textarea { background-color: #0f0f0f; border-color: #333; color: #fff; }
+        body.dark-mode .wa-input-label { color: #cbd5e1; } /* Label Input jadi terang */
+        
+        body.dark-mode .pass-wrapper { background: #0f0f0f; border-color: #333; }
+        body.dark-mode .pass-label { color: #cbd5e1; } /* Label Password jadi terang */
+        body.dark-mode .dl-pass { color: #60a5fa; } /* Password jadi biru terang */
+        
+        body.dark-mode .btn-wa-cancel { color: #e2e8f0; border-color: #475569; } /* Tombol Batal jadi terang */
+        body.dark-mode .btn-wa-cancel:hover { background: #334155; }
 
-        /* WRAPPER */
+        /* WRAPPER (LANGSUNG TAMPIL) */
         #content-wrapper {
             width: 95%; max-width: 854px;
-            display: none; 
+            display: flex; 
             flex-direction: column;
             align-items: center;
             z-index: 10;
@@ -101,6 +110,23 @@
         }
         .btn-unlock:disabled { background: #334155; color: #94a3b8; cursor: not-allowed; }
 
+        /* LOADING SPINNER */
+        #embed-loader {
+            position: absolute; inset: 0; 
+            background: #000; 
+            z-index: 15; 
+            display: none; 
+            align-items: center; justify-content: center;
+        }
+        .spinner {
+            width: 40px; height: 40px; 
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #2563eb; 
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
         /* OVERLAY ADBLOCK */
         #adblock-warning {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -129,7 +155,7 @@
             position: relative;
         }
 
-        /* Group Left (Theme & WA) */
+        /* Group Left (Theme & WA & DL) */
         .tools-left {
             display: flex; 
             gap: 5px; 
@@ -180,7 +206,7 @@
             background: #fff; border: 1px solid #cbd5e1;
             border-radius: 10px; width: 140px;
             display: none; flex-direction: column;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            box-shadow: none !important;
             overflow: hidden; z-index: 100;
         }
 
@@ -229,17 +255,11 @@
 
         #native-ad-wrapper { margin-top: 20px; width: 100%; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; padding: 12px; display: flex; justify-content: center; align-items: center; min-height: 120px; transition: all 0.5s ease; }
 
-        .verify-card { position: relative; background: #ffffff; padding: 32px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0; width: 90%; max-width: 400px; text-align: center; z-index: 100; margin-bottom: 30px; margin-top: 40px; transition: background-color 0.3s, border-color 0.3s; }
-        .code-display { font-size: 32px; font-weight: 700; letter-spacing: 6px; margin: 20px 0; padding: 12px; background: #f1f5f9; border-radius: 12px; }
-        input[type="tel"] { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #cbd5e1; text-align: center; font-size: 18px; margin-bottom: 16px; outline: none; }
-        .btn-verify { width: 100%; background: #0f172a; color: #fff; padding: 14px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; transition: all 0.3s; }
-        #error-msg { color: #dc2626; font-size: 14px; margin-top: -10px; margin-bottom: 10px; font-weight: 600; display: none; }
-        
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
         .shake-anim { animation: shake 0.4s ease-in-out; }
 
-        /* --- WA MODAL STYLES --- */
-        #wa-modal {
+        /* --- MODAL STYLES (SHARED) --- */
+        #wa-modal, #dl-modal {
             display: none; /* Hidden by default */
             position: fixed; inset: 0; z-index: 9999;
             background: rgba(0, 0, 0, 0.75);
@@ -247,7 +267,7 @@
             align-items: center; justify-content: center;
             opacity: 0; transition: opacity 0.3s ease;
         }
-        #wa-modal.open { display: flex; opacity: 1; }
+        #wa-modal.open, #dl-modal.open { display: flex; opacity: 1; }
 
         .wa-modal-content {
             background: #fff; width: 90%; max-width: 380px;
@@ -256,7 +276,7 @@
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             transform: scale(0.95); transition: transform 0.3s ease;
         }
-        #wa-modal.open .wa-modal-content { transform: scale(1); }
+        #wa-modal.open .wa-modal-content, #dl-modal.open .wa-modal-content { transform: scale(1); }
 
         .wa-step { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
         .step-num { 
@@ -264,7 +284,7 @@
             border-radius: 50%; display: flex; align-items: center; justify-content: center; 
             font-size: 12px; font-weight: 700; color: #475569; flex-shrink: 0;
         }
-        .step-text { font-size: 13px; color: #334155; line-height: 1.5; }
+        .step-text { font-size: 13px; color: #334155; line-height: 1.5; text-align: left; }
         .step-text strong { color: #0f172a; }
 
         /* New Request Input */
@@ -281,9 +301,33 @@
         .wa-actions { display: flex; gap: 10px; margin-top: 20px; }
         .btn-wa-cancel { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: transparent; color: #64748b; font-weight: 600; font-size: 13px; cursor: pointer; }
         .btn-wa-go { flex: 1.5; padding: 10px; border-radius: 8px; border: none; background: #22c55e; color: #fff; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+        /* DOWNLOAD SPECIFIC */
+        .dl-box { margin: 15px 0; }
+        .pass-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; margin-bottom: 5px; display: block; text-align: left; }
+        
+        .pass-wrapper {
+            background: #f1f5f9; border: 1px dashed #94a3b8; border-radius: 8px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 12px;
+        }
+        .dl-pass { 
+            font-family: monospace; font-size: 15px; font-weight: 700; color: #2563eb; 
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 10px;
+        }
+        .btn-copy-pass {
+            background: #cbd5e1; color: #334155; border: none; 
+            padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; 
+            cursor: pointer; transition: all 0.2s; white-space: nowrap;
+        }
+        .btn-copy-pass:hover { background: #94a3b8; color: #fff; }
+        .btn-copy-pass.copied { background: #22c55e; color: #fff; }
+
+        .btn-dl-go { flex: 1.5; padding: 10px; border-radius: 8px; border: none; background: #2563eb; color: #fff; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
     </style>
 </head>
-<body data-version="v21.6-BRIDGE-MODE">
+<body data-version="v27.0-FIX-DARKMODE-TEXT">
 
 <!-- OVERLAY WARNING ADBLOCK -->
 <div id="adblock-warning">
@@ -303,16 +347,6 @@
     <script type='text/javascript' src='//commonwealthgroovemadam.com/d8/73/50/d87350f60caa61205cfd0d5c55df9e33.js'></script>
 </div>
 
-<!-- KARTU VERIFIKASI -->
-<div id="verify-screen" class="verify-card">
-    <h2 class="text-xl font-bold text-gray-900 mb-1">Verifikasi</h2>
-    <p class="text-gray-500 text-xs mb-4">Masukkan kode akses video.</p>
-    <p id="error-msg">Kode salah!</p>
-    <div class="code-display" id="display-code">----</div>
-    <input type="tel" id="user-input" placeholder="____" maxlength="4">
-    <button onclick="checkCode()" class="btn-verify">Konfirmasi</button>
-</div>
-
 <!-- WA MODAL POPUP -->
 <div id="wa-modal">
     <div class="wa-modal-content">
@@ -320,115 +354,172 @@
             <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
             Lapor / Request
         </h3>
-        
+
+    <div class="wa-step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Screenshot</strong> layar jika error.</div>
+    </div>
+    <div class="wa-step">
+        <div class="step-num">2</div>
+        <div class="step-text">Tulis detail masalah atau <strong>Video</strong> yang mau direquest:</div>
+    </div>
+
+    <div class="wa-input-area">
+        <label class="wa-input-label">Pesan Tambahan (Opsional):</label>
+        <textarea id="wa-text-input" class="wa-textarea" placeholder="Contoh: Min, request douyin / Min, download eror"></textarea>
+    </div>
+
+    <div class="wa-actions">
+        <button class="btn-wa-cancel" onclick="toggleWaModal()">Tutup</button>
+        <button class="btn-wa-go" onclick="redirectToWa()">
+            Chat Admin
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+    </div>
+    </div>
+</div>
+
+<!-- DOWNLOAD MODAL POPUP (LENGKAP + COPY PASS) -->
+<div id="dl-modal">
+    <div class="wa-modal-content">
+        <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+            <svg class="w-6 h-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            Tutorial Ekstrak
+        </h3>
+
         <div class="wa-step">
             <div class="step-num">1</div>
-            <div class="step-text"><strong>Screenshot</strong> layar jika error.</div>
+            <div class="step-text">Download & Buka aplikasi <strong>ZArchiver</strong>.</div>
         </div>
         <div class="wa-step">
             <div class="step-num">2</div>
-            <div class="step-text">Tulis detail masalah atau <strong>Video</strong> yang mau direquest:</div>
+            <div class="step-text">Cari file di folder <strong>Download</strong>.</div>
+        </div>
+        <div class="wa-step">
+            <div class="step-num">3</div>
+            <div class="step-text">Klik file lalu pilih <strong>"Ekstrak di sini"</strong>.</div>
+        </div>
+        <div class="wa-step">
+            <div class="step-num">4</div>
+            <div class="step-text">Masukkan Password di bawah:</div>
         </div>
 
-        <div class="wa-input-area">
-            <textarea id="wa-text-input" class="wa-textarea" placeholder="Contoh: Min, request douyin / Min, download eror"></textarea>
+        <div class="dl-box">
+            <span class="pass-label">Password Arsip:</span>
+            <div class="pass-wrapper">
+                <span id="pass-text" class="dl-pass">VIDEYPREMIUM123</span>
+                <button class="btn-copy-pass" onclick="copyPassword()">SALIN</button>
+            </div>
         </div>
 
         <div class="wa-actions">
-            <button class="btn-wa-cancel" onclick="toggleWaModal()">Tutup</button>
-            <button class="btn-wa-go" onclick="redirectToWa()">
-                Chat Admin
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            <button class="btn-wa-cancel" onclick="toggleDlModal()">Batal</button>
+            <button class="btn-dl-go" onclick="processDownload()">
+                Download
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
             </button>
         </div>
     </div>
 </div>
+
 
 <div id="content-wrapper">
 
-<!-- INFO BADGE -->
-<div id="device-msg" class="clean-on-play hidden">
-    <div class="device-badge">
-        <p class="text-[10px] text-red-600 uppercase tracking-wider font-bold mb-1 flex items-center justify-center gap-1">
-            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            INFORMASI
-        </p>
-        <p class="text-xs text-gray-600 leading-snug">
-            Video mungkin sudah di kompres agar admin ga boros kuota. <br>
-            <b>Tips HD:</b> Jangan gunakan layar penuh (Fullscreen).
-        </p>
+    <!-- INFO BADGE -->
+    <div id="device-msg" class="clean-on-play">
+        <div class="device-badge">
+            <p class="text-[10px] text-red-600 uppercase tracking-wider font-bold mb-1 flex items-center justify-center gap-1">
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                INFORMASI
+            </p>
+            <p class="text-xs text-gray-600 leading-snug">
+                Video mungkin sudah di kompres agar admin ga boros kuota. <br>
+                <b>Tips HD:</b> Jangan gunakan layar penuh (Fullscreen).
+            </p>
+        </div>
     </div>
-</div>
 
-<div class="player-container">
-    <!-- OVERLAY LOCKER -->
-    <div id="ad-overlay-locker">
-        <div class="locker-content">
-            <div class="icon-circle">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+    <div class="player-container">
+        <!-- LOADING ANIMATION -->
+        <div id="embed-loader">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- OVERLAY LOCKER -->
+        <div id="ad-overlay-locker">
+            <div class="locker-content">
+                <div class="icon-circle">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                </div>
+                <div class="locker-title">Konten Terkunci</div>
+                <div class="locker-desc">
+                    Klik tombol di bawah dan tetap berada di halaman sponsor selama <b>8 detik</b> untuk membuka akses.
+                </div>
+                <button class="btn-unlock" onclick="startSmartUnlock()">
+                    <span>BUKA AKSES (8s)</span>
+                </button>
+                <div id="status-box" class="status-box"></div>
             </div>
-            <div class="locker-title">Konten Terkunci</div>
-            <div class="locker-desc">
-                Klik tombol di bawah dan tetap berada di halaman sponsor selama <b>8 detik</b> untuk membuka akses.
-            </div>
-            <button class="btn-unlock" onclick="startSmartUnlock()">
-                <span>BUKA AKSES (8s)</span>
+        </div>
+
+        <div id="embed-mount" style="width:100%; height:100%;"></div>
+
+        <div id="native-player-wrapper">
+            <video id="player" playsinline controls>
+                <source src="" type="" />
+            </video>
+        </div>
+    </div>
+
+    <!-- TOOLS CONTAINER -->
+    <div id="tools-container">
+        <!-- GRUP KIRI: TEMA & WA & DL -->
+        <div class="tools-left">
+            <!-- Tombol Ganti Mode -->
+            <button class="btn-icon-only" onclick="toggleTheme()" title="Ganti Mode">
+                <svg class="icon-moon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                <svg class="icon-sun" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             </button>
-            <div id="status-box" class="status-box"></div>
+
+            <!-- Tombol WhatsApp (Icon Only) -->
+            <button class="btn-icon-only" onclick="toggleWaModal()" title="Lapor Masalah">
+                <svg style="width:20px;height:20px;" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                </svg>
+            </button>
+
+            <!-- Tombol Download (ID PARAMETER, Hidden default) -->
+            <button id="btn-download-trigger" class="btn-icon-only" style="display:none;" onclick="toggleDlModal()" title="Download File">
+                <svg style="width:20px;height:20px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- GRUP KANAN: SERVER (HANYA MUNCUL JIKA > 1 PARAMETER) -->
+        <div id="server-group" class="server-wrapper">
+            <button class="btn-server" onclick="toggleServerMenu()">
+                <svg style="width:18px;height:18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+                </svg>
+                <span id="current-server-name">Server</span>
+                <svg style="width:14px;height:14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+            <div id="server-list" class="server-dropdown">
+                <!-- List by JS -->
+            </div>
         </div>
     </div>
 
-    <div id="embed-mount" style="width:100%; height:100%;"></div>
-
-    <div id="native-player-wrapper">
-        <video id="player" playsinline controls>
-            <source src="" type="" />
-        </video>
-    </div>
-</div>
-
-<!-- TOOLS CONTAINER -->
-<div id="tools-container">
-    <!-- GRUP KIRI: TEMA & WA -->
-    <div class="tools-left">
-        <!-- Tombol Ganti Mode -->
-        <button class="btn-icon-only" onclick="toggleTheme()" title="Ganti Mode">
-            <svg class="icon-moon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-            <svg class="icon-sun" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-        </button>
-        
-        <!-- Tombol WhatsApp (Icon Only) -->
-        <button class="btn-icon-only" onclick="toggleWaModal()" title="Lapor Masalah">
-            <svg style="width:20px;height:20px;" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-            </svg>
-        </button>
-    </div>
-    
-    <!-- GRUP KANAN: SERVER (HANYA MUNCUL JIKA > 1 PARAMETER) -->
-    <div id="server-group" class="server-wrapper">
-        <button class="btn-server" onclick="toggleServerMenu()">
-            <svg style="width:18px;height:18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-            </svg>
-            <span id="current-server-name">Server</span>
-            <svg style="width:14px;height:14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-        </button>
-        <div id="server-list" class="server-dropdown">
-            <!-- List by JS -->
+    <div id="clean-ui-area" class="clean-on-play w-full flex flex-col items-center">
+        <!-- NATIVE AD -->
+        <div id="native-ad-wrapper">
+            <script async="async" data-cfasync="false" src="https://commonwealthgroovemadam.com/2259c8961aeea898328fa2ef52a93ed9/invoke.js"></script>
+            <div id="container-2259c8961aeea898328fa2ef52a93ed9"></div>
         </div>
     </div>
-</div>
-
-<div id="clean-ui-area" class="clean-on-play w-full flex flex-col items-center">
-    <!-- NATIVE AD -->
-    <div id="native-ad-wrapper">
-        <script async="async" data-cfasync="false" src="https://commonwealthgroovemadam.com/2259c8961aeea898328fa2ef52a93ed9/invoke.js"></script>
-        <div id="container-2259c8961aeea898328fa2ef52a93ed9"></div>
-    </div>
-</div>
 </div>
 
 <script>
@@ -456,8 +547,15 @@
 
     window.onload = function() { checkAdBlocker(); };
     
+    // --- TOGGLE THEME & STATUS BAR COLOR ---
     function toggleTheme() {
         document.body.classList.toggle('dark-mode');
+        const meta = document.getElementById('meta-theme');
+        if (document.body.classList.contains('dark-mode')) {
+            meta.setAttribute('content', '#050505'); // Match dark bg
+        } else {
+            meta.setAttribute('content', '#f8fafc'); // Match light bg
+        }
     }
 
     // --- WA POPUP LOGIC ---
@@ -488,6 +586,44 @@
         toggleWaModal();
     }
 
+    // --- DOWNLOAD POPUP LOGIC ---
+    let finalDownloadLink = "";
+
+    function toggleDlModal() {
+        const modal = document.getElementById('dl-modal');
+        if (modal.classList.contains('open')) {
+            modal.classList.remove('open');
+            setTimeout(() => modal.style.display = 'none', 300);
+        } else {
+            modal.style.display = 'flex';
+            modal.offsetHeight;
+            modal.classList.add('open');
+        }
+    }
+
+    function processDownload() {
+        if(finalDownloadLink) {
+            window.open(finalDownloadLink, '_blank');
+            toggleDlModal();
+        }
+    }
+
+    function copyPassword() {
+        const passText = document.getElementById('pass-text').innerText;
+        navigator.clipboard.writeText(passText).then(() => {
+            const btn = document.querySelector('.btn-copy-pass');
+            const originalText = btn.innerText;
+            btn.innerText = "DISALIN!";
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.classList.remove('copied');
+            }, 2000);
+        }).catch(err => {
+            console.error('Gagal menyalin', err);
+        });
+    }
+
     // --- SERVER LOGIC ---
     function toggleServerMenu() {
         document.getElementById('server-list').classList.toggle('show');
@@ -501,11 +637,13 @@
         }
     });
 
-    document.getElementById('wa-modal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            toggleWaModal();
-        }
-    });
+    // Close Modals on outside click
+    window.onclick = function(event) {
+        const waModal = document.getElementById('wa-modal');
+        const dlModal = document.getElementById('dl-modal');
+        if (event.target == waModal) { toggleWaModal(); }
+        if (event.target == dlModal) { toggleDlModal(); }
+    }
 
     const adList = [
         "https://otieu.com/4/10390860", 
@@ -519,14 +657,12 @@
         h: 'https://short.icu/', s: 'https://gradehgplus.com/e/', v: 'https://vidhidepre.com/v/',
         t: 'https://emturbovid.com/t/', d: 'https://dood.li/e/', o: 'https://voe.sx/e/',
         f: 'https://filemoon.sx/e/', st: 'https://streamtape.com/e/', md: 'https://mixdrop.co/e/',
-        id: 'https://cdn.videy.co/', vip: 'https://bytt.jb-aiwei.cc/contents/videos/',
+        vid: 'https://cdn.videy.co/', // GANTI 'id' LAMA JADI 'vid'
+        vip: 'https://bytt.jb-aiwei.cc/contents/videos/',
         tv: 'https://stream.kingbokep.video/', rs: 'https://t33.cdn2020.com/video/m3u8/',
         im: 'https://t0.97img.com/',
         bs: 'https://bysejikuar.com/e/'
     };
-
-    let correctCode = Math.floor(1000 + Math.random() * 9000);
-    document.getElementById('display-code').innerText = correctCode;
 
     // GLOBAL STATE
     let activeVideoUrl = "";
@@ -534,9 +670,26 @@
     let activeMime = "";
     let availableServers = [];
 
-    // --- INITIALIZE SERVERS FROM PARAMS ---
+    // --- INITIALIZE SERVERS & DOWNLOAD PARAM ---
     (function initVideoLogic() {
         const params = new URLSearchParams(window.location.search);
+        
+        // 1. Check Download Parameter 'id' (Base64 Encoded)
+        if (params.has('id')) {
+            const encodedDl = params.get('id');
+            try {
+                // Decode Base64 agar link asli tidak terbaca di URL
+                const decoded = atob(encodedDl);
+                if(decoded.includes('http')) {
+                    finalDownloadLink = decoded;
+                    document.getElementById('btn-download-trigger').style.display = 'flex';
+                }
+            } catch (e) {
+                console.log("Parameter 'id' bukan base64 valid");
+            }
+        }
+
+        // 2. Server Logic
         let serverCount = 1;
 
         for (let key in playerBases) {
@@ -545,7 +698,7 @@
                 let isNative = false;
                 let mime = "";
 
-                if (key === 'id') { 
+                if (key === 'vid') { // 'vid' ADALAH PENGGANTI 'id' UNTUK VIDEO
                     isNative = true; u = playerBases[key] + params.get(key); mime = 'video/mp4'; 
                 }
                 else if (key === 'vip' || key === 'rs' || key === 'tv' || key === 'im') { 
@@ -592,7 +745,10 @@
                         item.classList.add('active');
                         document.getElementById('current-server-name').innerText = srv.name;
                         
-                        loadPlayerBackground();
+                        // JIKA SUDAH TERBUKA, LANGSUNG LOAD SAAT GANTI SERVER
+                        if(isUnlocked) {
+                             loadPlayerBackground();
+                        }
                     };
                     listEl.appendChild(item);
                 });
@@ -615,6 +771,10 @@
         const mount = document.getElementById('embed-mount');
         const nativeWrap = document.getElementById('native-player-wrapper');
         const videoEl = document.getElementById('player');
+        
+        // --- SHOW LOADER ANIMATION ---
+        const loader = document.getElementById('embed-loader');
+        loader.style.display = 'flex';
 
         mount.innerHTML = '';
         mount.style.display = 'none';
@@ -628,22 +788,37 @@
         if (activeIsNative) {
             nativeWrap.style.display = 'block';
             
+            // Function to hide loader when native video ready
+            const onNativeReady = () => { loader.style.display = 'none'; };
+            
             if (activeMime === 'application/x-mpegURL') {
                 if (Hls.isSupported()) {
                     const hls = new Hls(); 
                     hls.loadSource(activeVideoUrl); 
                     hls.attachMedia(videoEl);
-                    hls.on(Hls.Events.MANIFEST_PARSED, function() { initPlyr(videoEl); });
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() { 
+                        initPlyr(videoEl); 
+                        onNativeReady(); 
+                    });
                 } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
-                    videoEl.src = activeVideoUrl; initPlyr(videoEl);
+                    videoEl.src = activeVideoUrl; 
+                    initPlyr(videoEl);
+                    videoEl.addEventListener('loadedmetadata', onNativeReady);
                 }
             } else { 
-                videoEl.src = activeVideoUrl; initPlyr(videoEl); 
+                videoEl.src = activeVideoUrl; 
+                initPlyr(videoEl); 
+                videoEl.addEventListener('loadeddata', onNativeReady);
             }
+            
+            // Fallback safety timeout if event never fires
+            setTimeout(onNativeReady, 3000);
+
         } else {
             mount.style.display = 'block';
             if (activeVideoUrl) { 
-                mount.innerHTML = `<iframe src="${activeVideoUrl}" allowfullscreen allow="autoplay" scrolling="no"></iframe>`; 
+                // Add ONLOAD event to iframe to hide loader
+                mount.innerHTML = `<iframe src="${activeVideoUrl}" allowfullscreen allow="autoplay" scrolling="no" onload="document.getElementById('embed-loader').style.display='none'"></iframe>`; 
             }
         }
     }
@@ -667,7 +842,10 @@
 
     function killSocialBar() {
         const socialAd = document.getElementById('social-bar-wrapper');
-        if(socialAd) socialAd.remove();
+        if(socialAd) {
+            socialAd.style.opacity = '0';
+            setTimeout(() => { socialAd.remove(); }, 500);
+        }
     }
 
     // --- LOGIKA DUMMY BRIDGE (ANTI-HIJACK) & ANTI-CHEAT ---
@@ -687,109 +865,101 @@
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <style>body{background:#000;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;text-align:center;}</style>
                 </head>
-                <body>
-                    <div style="font-size:20px;margin-bottom:10px;">⏳ Membuka Halaman Sponsor...</div>
-                    <div style="font-size:14px;color:#aaa;">Jangan tutup halaman ini.</div>
-                    <script>
-                        setTimeout(function() {
-                            window.location.href = "${targetUrl}";
-                        }, 500);
-                    <\/script>
-                </body>
-                </html>
-            `);
-            newWin.document.close();
-        } else {
-            // Fallback jika popup blocker aktif
-            window.location.href = targetUrl; 
-        }
+            <body>
+                <div style="font-size:20px;margin-bottom:10px;">⏳ Membuka Halaman Sponsor...</div>
+                <div style="font-size:14px;color:#aaa;">Jangan tutup halaman ini.</div>
+                <script>
+                    setTimeout(function() {
+                        window.location.href = "${targetUrl}";
+                    }, 500);
+                <\/script>
+            </body>
+            </html>
+        `);
+        newWin.document.close();
+    } else {
+        // Fallback jika popup blocker aktif
+        window.location.href = targetUrl; 
     }
+}
 
-    function startSmartUnlock() {
-        if(isUnlocked) return;
+function startSmartUnlock() {
+    if(isUnlocked) return;
+    
+    // Panggil fungsi Jembatan
+    openSmartBridge(adList[currentAdIndex]);
+    
+    adStartTime = Date.now();
+    isProcessRunning = true;
+    
+    const btnPlayer = document.querySelector('.btn-unlock');
+    const statusBox = document.getElementById('status-box');
+    
+    statusBox.style.opacity = '1';
+    statusBox.className = "status-box status-waiting";
+    statusBox.innerHTML = `<svg class="animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>TUNGGU 8 DETIK...</span>`;
+    btnPlayer.disabled = true;
+}
+
+// LOGIKA ANTI-CHEAT (User dilarang balik sebelum waktunya)
+function handleUserReturn() {
+    if (!isProcessRunning) return; 
+    if (isUnlocked) return;
+
+    const now = Date.now();
+    const elapsed = (now - adStartTime) / 1000; 
+
+    if (elapsed >= REQUIRED_DURATION) {
+        // SUKSES
+        isProcessRunning = false;
+        isUnlocked = true;
+
+        document.getElementById('status-box').className = "status-box status-success"; 
+        document.getElementById('status-box').innerHTML = `<span>Terbuka!</span>`;
+        const overlay = document.getElementById('ad-overlay-locker');
+        overlay.style.opacity = '0';
+        setTimeout(() => { overlay.style.display = 'none'; }, 500);
+
+        const cleanArea = document.getElementById('clean-ui-area');
+        cleanArea.style.opacity = '0'; setTimeout(() => { cleanArea.style.display = 'none'; }, 500);
         
-        // Panggil fungsi Jembatan
-        openSmartBridge(adList[currentAdIndex]);
+        // HILANGKAN INFORMASI (Sesuai Request)
+        const infoBadge = document.getElementById('device-msg');
+        infoBadge.style.opacity = '0'; setTimeout(() => { infoBadge.style.display = 'none'; }, 500);
         
-        adStartTime = Date.now();
-        isProcessRunning = true;
-        
+        killSocialBar();
+
+        // LOAD PLAYER (BARU LOAD SEKARANG)
+        loadPlayerBackground();
+
+    } else {
+        // GAGAL (Balik terlalu cepat)
+        isProcessRunning = false;
+        adStartTime = 0;
+
         const btnPlayer = document.querySelector('.btn-unlock');
         const statusBox = document.getElementById('status-box');
         
-        statusBox.style.opacity = '1';
-        statusBox.className = "status-box status-waiting";
-        statusBox.innerHTML = `<svg class="animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>TUNGGU 8 DETIK...</span>`;
-        btnPlayer.disabled = true;
+        statusBox.className = "status-box status-fail";
+        statusBox.innerHTML = `<span>Gagal! Jangan kembali sebelum selesai.</span>`;
+        
+        btnPlayer.disabled = false;
+        btnPlayer.style.background = "#ef4444"; 
+        btnPlayer.style.color = "white";
+        btnPlayer.innerHTML = `<span>ULANGI (8s)</span>`;
+        
+        document.querySelector('.locker-content').classList.add('shake-anim');
+        setTimeout(() => document.querySelector('.locker-content').classList.remove('shake-anim'), 500);
     }
+}
 
-    // LOGIKA ANTI-CHEAT (User dilarang balik sebelum waktunya)
-    function handleUserReturn() {
-        if (!isProcessRunning) return; 
-        if (isUnlocked) return;
-
-        const now = Date.now();
-        const elapsed = (now - adStartTime) / 1000; 
-
-        if (elapsed >= REQUIRED_DURATION) {
-            // SUKSES
-            isProcessRunning = false;
-            isUnlocked = true;
-
-            document.getElementById('status-box').className = "status-box status-success"; 
-            document.getElementById('status-box').innerHTML = `<span>Terbuka!</span>`;
-            const overlay = document.getElementById('ad-overlay-locker');
-            overlay.style.opacity = '0';
-            setTimeout(() => { overlay.style.display = 'none'; }, 500);
-
-            const cleanArea = document.getElementById('clean-ui-area');
-            cleanArea.style.opacity = '0'; setTimeout(() => { cleanArea.style.display = 'none'; }, 500);
-            const infoBadge = document.getElementById('device-msg');
-            infoBadge.style.opacity = '0'; setTimeout(() => { infoBadge.style.display = 'none'; }, 500);
-            const topAd = document.getElementById('social-bar-wrapper');
-            if(topAd) { topAd.style.opacity = '0'; setTimeout(() => { topAd.remove(); }, 500); }
-
-        } else {
-            // GAGAL (Balik terlalu cepat)
-            isProcessRunning = false;
-            adStartTime = 0;
-
-            const btnPlayer = document.querySelector('.btn-unlock');
-            const statusBox = document.getElementById('status-box');
-            
-            statusBox.className = "status-box status-fail";
-            statusBox.innerHTML = `<span>Gagal! Jangan kembali sebelum selesai.</span>`;
-            
-            btnPlayer.disabled = false;
-            btnPlayer.style.background = "#ef4444"; 
-            btnPlayer.style.color = "white";
-            btnPlayer.innerHTML = `<span>ULANGI (8s)</span>`;
-            
-            document.querySelector('.locker-content').classList.add('shake-anim');
-            setTimeout(() => document.querySelector('.locker-content').classList.remove('shake-anim'), 500);
-        }
+document.addEventListener("visibilitychange", function() {
+    if (!document.hidden) {
+        handleUserReturn();
     }
+});
 
-    document.addEventListener("visibilitychange", function() {
-        if (!document.hidden) {
-            handleUserReturn();
-        }
-    });
-    
-    window.addEventListener("focus", handleUserReturn);
-
-    function checkCode() {
-        const val = document.getElementById('user-input').value;
-        if (val == correctCode) {
-            killSocialBar();
-            document.getElementById('verify-screen').style.display = 'none';
-            document.getElementById('content-wrapper').style.display = 'flex';
-            document.getElementById('device-msg').classList.remove('hidden');
-            loadPlayerBackground();
-        } else {
-            document.getElementById('error-msg').style.display = 'block';
-        }
-    }
+window.addEventListener("focus", handleUserReturn);
 </script>
 
 </body>
