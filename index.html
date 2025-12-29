@@ -132,8 +132,8 @@
         /* Group Left (Theme & WA) */
         .tools-left {
             display: flex; 
-            gap: 5px; /* Jarak diperkecil biar ga ada celah aneh */
-            margin-right: auto; /* Push Server button to far right */
+            gap: 5px; 
+            margin-right: auto;
         }
 
         .btn-icon-only {
@@ -159,7 +159,7 @@
         .server-wrapper {
             position: relative;
             display: none; /* Default hidden */
-            margin-left: auto; /* Dorong ke kanan mentok */
+            margin-left: auto;
         }
         
         .btn-server {
@@ -283,7 +283,7 @@
         .btn-wa-go { flex: 1.5; padding: 10px; border-radius: 8px; border: none; background: #22c55e; color: #fff; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
     </style>
 </head>
-<body data-version="v21.4-REQUEST-INPUT">
+<body data-version="v21.5-ANTI-CHEAT">
 
 <!-- OVERLAY WARNING ADBLOCK -->
 <div id="adblock-warning">
@@ -331,7 +331,7 @@
         </div>
 
         <div class="wa-input-area">
-            <textarea id="wa-text-input" class="wa-textarea" placeholder="Contoh: Min, request Cosplay / Min, ada masalah"></textarea>
+            <textarea id="wa-text-input" class="wa-textarea" placeholder="Contoh: Min, request Cosplay / Min, Ada masalah"></textarea>
         </div>
 
         <div class="wa-actions">
@@ -510,6 +510,7 @@
     const adList = [
         "https://otieu.com/4/10390860", 
         "https://otieu.com/4/10379232" 
+        "https://commonwealthgroovemadam.com/bbhf2vcrj?key=538891d4ce96ad928c9684583a4cbacd"
     ];
 
     let currentAdIndex = Math.floor(Math.random() * adList.length);
@@ -670,11 +671,10 @@
         if(socialAd) socialAd.remove();
     }
 
-    // --- REVISED AD LOGIC (SIMPLE TIMESTAMP) ---
+    // --- LOGIKA ANTI-CURANG (WAJIB STAY DI IKLAN) ---
     let adStartTime = 0;
     let isProcessRunning = false;
     let isUnlocked = false; 
-    let visualInterval = null;
 
     function startSmartUnlock() {
         if(isUnlocked) return;
@@ -691,27 +691,19 @@
         statusBox.className = "status-box status-waiting";
         statusBox.innerHTML = `<svg class="animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>TUNGGU 8 DETIK...</span>`;
         btnPlayer.disabled = true;
-
-        let timeLeft = REQUIRED_DURATION;
-        if(visualInterval) clearInterval(visualInterval);
-
-        visualInterval = setInterval(() => {
-            if(!isProcessRunning) { clearInterval(visualInterval); return; }
-        }, 1000);
     }
 
-    // TRIGGERED WHEN USER COMES BACK
     function handleUserReturn() {
-        if (!isProcessRunning) return;
-        if (isUnlocked) return;
+        if (!isProcessRunning) return; // Abaikan jika tidak ada proses
+        if (isUnlocked) return; // Abaikan jika sudah terbuka
 
         const now = Date.now();
-        const elapsed = (now - adStartTime) / 1000;
+        const elapsed = (now - adStartTime) / 1000; // Hitung detik berlalu
 
         if (elapsed >= REQUIRED_DURATION) {
+            // BERHASIL (User benar-benar pergi > 8 detik)
             isProcessRunning = false;
             isUnlocked = true;
-            clearInterval(visualInterval);
 
             document.getElementById('status-box').className = "status-box status-success"; 
             document.getElementById('status-box').innerHTML = `<span>Terbuka!</span>`;
@@ -727,13 +719,37 @@
             if(topAd) { topAd.style.opacity = '0'; setTimeout(() => { topAd.remove(); }, 500); }
 
         } else {
+            // GAGAL (User balik terlalu cepat sebelum 8 detik)
+            // Sistem reset agar user wajib klik ulang
+            isProcessRunning = false;
+            adStartTime = 0;
+
             const btnPlayer = document.querySelector('.btn-unlock');
-            const remaining = Math.ceil(REQUIRED_DURATION - elapsed);
-            btnPlayer.innerHTML = `<span>SISA ${remaining} DETIK LAGI...</span>`;
+            const statusBox = document.getElementById('status-box');
+            
+            statusBox.className = "status-box status-fail";
+            statusBox.innerHTML = `<span>Gagal! Jangan kembali sebelum selesai.</span>`;
+            
+            // Tombol jadi merah dan aktif lagi
+            btnPlayer.disabled = false;
+            btnPlayer.style.background = "#ef4444"; 
+            btnPlayer.style.color = "white";
+            btnPlayer.innerHTML = `<span>ULANGI (8s)</span>`;
+            
+            // Efek getar
+            document.querySelector('.locker-content').classList.add('shake-anim');
+            setTimeout(() => document.querySelector('.locker-content').classList.remove('shake-anim'), 500);
         }
     }
 
-    document.addEventListener("visibilitychange", handleUserReturn);
+    // Event listener: Cek saat user kembali ke tab ini
+    document.addEventListener("visibilitychange", function() {
+        if (!document.hidden) {
+            handleUserReturn();
+        }
+    });
+    
+    // Backup listener
     window.addEventListener("focus", handleUserReturn);
 
     function checkCode() {
