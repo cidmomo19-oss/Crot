@@ -38,15 +38,21 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
+        /* DARK MODE */
         body.dark-mode { background-color: #050505; color: #e5e5e5; }
         body.dark-mode .verify-card { background-color: #121212; border-color: #262626; box-shadow: 0 4px 20px -1px rgba(0, 0, 0, 0.9); }
-        body.dark-mode h2 { color: #ffffff; }
-        body.dark-mode .text-gray-500 { color: #a3a3a3; }
+        body.dark-mode h2, body.dark-mode h3 { color: #ffffff; }
+        body.dark-mode .text-gray-500, body.dark-mode .text-gray-600 { color: #a3a3a3; }
         body.dark-mode .code-display { background-color: #1f1f1f; color: #ffffff; border: 1px solid #333; }
         body.dark-mode input[type="tel"] { background-color: #0a0a0a; border-color: #404040; color: #fff; }
         body.dark-mode .btn-verify { background-color: #ffffff; color: #000000; }
-        body.dark-mode .contact-link { background-color: #121212; border-color: #333; color: #d4d4d4; }
         body.dark-mode .device-badge { background: #2b0b0b; border-color: #450a0a; }
+        
+        /* Modal Dark Mode */
+        body.dark-mode .wa-modal-content { background-color: #1e1e1e; border-color: #333; color: #fff; }
+        body.dark-mode .step-num { background: #333; color: #fff; }
+        body.dark-mode .step-text { color: #ccc; }
+        body.dark-mode textarea { background-color: #0f0f0f; border-color: #333; color: #fff; }
 
         /* WRAPPER */
         #content-wrapper {
@@ -59,7 +65,7 @@
             margin-top: 10px;
         }
 
-        /* PLAYER CONTAINER - NO SHADOW */
+        /* PLAYER CONTAINER */
         .player-container {
             width: 100%; aspect-ratio: 16 / 9;
             background: #000; border-radius: 12px; 
@@ -117,10 +123,17 @@
             width: 100%;
             display: flex;
             flex-direction: row;
-            justify-content: flex-start;
-            gap: 5px; 
+            align-items: flex-start;
             margin-top: 12px;
             z-index: 30;
+            position: relative;
+        }
+
+        /* Group Left (Theme & WA) */
+        .tools-left {
+            display: flex; 
+            gap: 5px; /* Jarak diperkecil biar ga ada celah aneh */
+            margin-right: auto; /* Push Server button to far right */
         }
 
         .btn-icon-only {
@@ -132,7 +145,7 @@
             background: #ffffff;
             color: #0f172a;
             transition: all 0.2s;
-            box-shadow: none !important; /* SHADOW DIHAPUS DISINI */
+            box-shadow: none !important;
             text-decoration: none; 
         }
         
@@ -141,18 +154,55 @@
         }
 
         .btn-icon-only:hover { transform: translateY(-2px); }
-        
-        /* ANIMASI KLIK (BOUNCE) */
-        @keyframes clickBounce {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.8); }
-            100% { transform: scale(1); }
+
+        /* SERVER BUTTON & DROPDOWN */
+        .server-wrapper {
+            position: relative;
+            display: none; /* Default hidden */
+            margin-left: auto; /* Dorong ke kanan mentok */
         }
-        .animate-click {
-            animation: clickBounce 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        
+        .btn-server {
+            height: 42px; padding: 0 16px; border-radius: 10px;
+            border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-weight: 600; font-size: 13px; cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .btn-icon-only.unlocked { color: #22c55e; border-color: #22c55e; }
+        body.dark-mode .btn-server {
+            background: #1e293b; border-color: #334155; color: #f8fafc;
+        }
+        
+        .server-dropdown {
+            position: absolute;
+            top: 50px; right: 0;
+            background: #fff; border: 1px solid #cbd5e1;
+            border-radius: 10px; width: 140px;
+            display: none; flex-direction: column;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            overflow: hidden; z-index: 100;
+        }
+
+        .server-dropdown.show { display: flex; animation: fadeInDown 0.2s ease; }
+
+        .server-item {
+            padding: 10px 14px; font-size: 13px; font-weight: 600;
+            cursor: pointer; text-align: left; border-bottom: 1px solid #f1f5f9;
+        }
+        .server-item:last-child { border-bottom: none; }
+        .server-item:hover { background: #f8fafc; color: #2563eb; }
+        .server-item.active { background: #eff6ff; color: #2563eb; }
+
+        body.dark-mode .server-dropdown { background: #1e293b; border-color: #334155; }
+        body.dark-mode .server-item { color: #cbd5e1; border-bottom-color: #334155; }
+        body.dark-mode .server-item:hover { background: #334155; color: #fff; }
+        body.dark-mode .server-item.active { background: #1e3a8a; color: #fff; }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         /* ICON SWITCHER LOGIC */
         .icon-sun { display: none; }
@@ -177,18 +227,6 @@
 
         .clean-on-play { transition: opacity 0.5s ease; }
 
-        /* CONTACT LINK */
-        .contact-link { 
-            margin-top: 12px; width: 100%; 
-            font-size: 13px; color: #0f172a; 
-            background: #f1f5f9; padding: 12px; 
-            border-radius: 12px; border: 1px solid #cbd5e1; 
-            display: flex; flex-direction: row; 
-            align-items: center; justify-content: center; 
-            gap: 10px; text-decoration: none; 
-            transition: all 0.3s ease; font-weight: 600; 
-        }
-
         #native-ad-wrapper { margin-top: 20px; width: 100%; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; padding: 12px; display: flex; justify-content: center; align-items: center; min-height: 120px; transition: all 0.5s ease; }
 
         .verify-card { position: relative; background: #ffffff; padding: 32px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0; width: 90%; max-width: 400px; text-align: center; z-index: 100; margin-bottom: 30px; margin-top: 40px; transition: background-color 0.3s, border-color 0.3s; }
@@ -199,9 +237,53 @@
         
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
         .shake-anim { animation: shake 0.4s ease-in-out; }
+
+        /* --- WA MODAL STYLES --- */
+        #wa-modal {
+            display: none; /* Hidden by default */
+            position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        #wa-modal.open { display: flex; opacity: 1; }
+
+        .wa-modal-content {
+            background: #fff; width: 90%; max-width: 380px;
+            border-radius: 16px; padding: 24px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: scale(0.95); transition: transform 0.3s ease;
+        }
+        #wa-modal.open .wa-modal-content { transform: scale(1); }
+
+        .wa-step { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+        .step-num { 
+            width: 24px; height: 24px; background: #f1f5f9; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            font-size: 12px; font-weight: 700; color: #475569; flex-shrink: 0;
+        }
+        .step-text { font-size: 13px; color: #334155; line-height: 1.5; }
+        .step-text strong { color: #0f172a; }
+
+        /* New Request Input */
+        .wa-input-area { margin-top: 15px; margin-bottom: 10px; }
+        .wa-input-label { font-size: 12px; font-weight: 600; margin-bottom: 6px; display: block; color: #64748b; }
+        .wa-textarea {
+            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1;
+            font-family: 'Inter', sans-serif; font-size: 13px;
+            background: #f8fafc; outline: none; resize: none; height: 70px;
+            transition: all 0.2s;
+        }
+        .wa-textarea:focus { border-color: #2563eb; background: #fff; }
+
+        .wa-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-wa-cancel { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: transparent; color: #64748b; font-weight: 600; font-size: 13px; cursor: pointer; }
+        .btn-wa-go { flex: 1.5; padding: 10px; border-radius: 8px; border: none; background: #22c55e; color: #fff; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
     </style>
 </head>
-<body data-version="v21.0-ICON-TOOLS">
+<body data-version="v21.4-REQUEST-INPUT">
 
 <!-- OVERLAY WARNING ADBLOCK -->
 <div id="adblock-warning">
@@ -229,6 +311,37 @@
     <div class="code-display" id="display-code">----</div>
     <input type="tel" id="user-input" placeholder="____" maxlength="4">
     <button onclick="checkCode()" class="btn-verify">Konfirmasi</button>
+</div>
+
+<!-- WA MODAL POPUP -->
+<div id="wa-modal">
+    <div class="wa-modal-content">
+        <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+            <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Lapor / Request
+        </h3>
+        
+        <div class="wa-step">
+            <div class="step-num">1</div>
+            <div class="step-text"><strong>Screenshot</strong> layar jika error.</div>
+        </div>
+        <div class="wa-step">
+            <div class="step-num">2</div>
+            <div class="step-text">Tulis detail masalah atau <strong>Judul Video</strong> yang mau direquest:</div>
+        </div>
+
+        <div class="wa-input-area">
+            <textarea id="wa-text-input" class="wa-textarea" placeholder="Contoh: Min, request Cosplay / Min, ada masalah"></textarea>
+        </div>
+
+        <div class="wa-actions">
+            <button class="btn-wa-cancel" onclick="toggleWaModal()">Tutup</button>
+            <button class="btn-wa-go" onclick="redirectToWa()">
+                Chat Admin
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+        </div>
+    </div>
 </div>
 
 <div id="content-wrapper">
@@ -276,36 +389,45 @@
 
 <!-- TOOLS CONTAINER -->
 <div id="tools-container">
-    <!-- Tombol Ganti Mode -->
-    <button class="btn-icon-only" onclick="toggleTheme()" title="Ganti Mode">
-        <svg class="icon-moon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-        <svg class="icon-sun" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-    </button>
+    <!-- GRUP KIRI: TEMA & WA -->
+    <div class="tools-left">
+        <!-- Tombol Ganti Mode -->
+        <button class="btn-icon-only" onclick="toggleTheme()" title="Ganti Mode">
+            <svg class="icon-moon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            <svg class="icon-sun" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+        </button>
+        
+        <!-- Tombol WhatsApp (Icon Only) -->
+        <button class="btn-icon-only" onclick="toggleWaModal()" title="Lapor Masalah">
+            <svg style="width:20px;height:20px;" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+            </svg>
+        </button>
+    </div>
     
-    <!-- Tombol Download (DIRECT & HIDDEN UNTIL UNLOCKED) -->
-    <!-- Memicu function triggerDlAnim saat diklik -->
-    <a href="#" id="dl-link" target="_blank" class="btn-icon-only" onclick="actionDownloadWithAnim(event)" style="display: none;" title="Download Video">
-        <svg style="width:20px;height:20px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-        </svg>
-    </a>
+    <!-- GRUP KANAN: SERVER (HANYA MUNCUL JIKA > 1 PARAMETER) -->
+    <div id="server-group" class="server-wrapper">
+        <button class="btn-server" onclick="toggleServerMenu()">
+            <svg style="width:18px;height:18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+            </svg>
+            <span id="current-server-name">Server</span>
+            <svg style="width:14px;height:14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+        <div id="server-list" class="server-dropdown">
+            <!-- List by JS -->
+        </div>
+    </div>
 </div>
 
 <div id="clean-ui-area" class="clean-on-play w-full flex flex-col items-center">
-    
-    <!-- Tombol WhatsApp -->
-    <a href="https://wa.me/6285126450524" target="_blank" class="contact-link">
-        <svg style="width:24px; height:24px;" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-        </svg>
-        <span>Lapor Masalah / Request Video</span>
-    </a>
-
+    <!-- NATIVE AD -->
     <div id="native-ad-wrapper">
         <script async="async" data-cfasync="false" src="https://commonwealthgroovemadam.com/2259c8961aeea898328fa2ef52a93ed9/invoke.js"></script>
         <div id="container-2259c8961aeea898328fa2ef52a93ed9"></div>
     </div>
-
 </div>
 </div>
 
@@ -334,30 +456,56 @@
 
     window.onload = function() { checkAdBlocker(); };
     
-    // --- ANIMASI KLIK DOWNLOAD (DELAY REDIRECT) ---
-    function actionDownloadWithAnim(e) {
-        // 1. Cegah pindah halaman langsung
-        e.preventDefault();
-        
-        const btn = e.currentTarget;
-        const targetUrl = btn.href;
-
-        // 2. Jalankan animasi CSS
-        btn.classList.add('animate-click');
-
-        // 3. Tunggu animasi selesai (300ms) baru pindah halaman
-        setTimeout(() => {
-            btn.classList.remove('animate-click');
-            // Buka link di tab baru secara manual
-            if (targetUrl && targetUrl !== "#") {
-                window.open(targetUrl, '_blank');
-            }
-        }, 300); // 300ms delay sesuai durasi animasi
-    }
-
     function toggleTheme() {
         document.body.classList.toggle('dark-mode');
     }
+
+    // --- WA POPUP LOGIC ---
+    function toggleWaModal() {
+        const modal = document.getElementById('wa-modal');
+        if (modal.classList.contains('open')) {
+            modal.classList.remove('open');
+            setTimeout(() => modal.style.display = 'none', 300);
+        } else {
+            modal.style.display = 'flex';
+            modal.offsetHeight; // force reflow
+            modal.classList.add('open');
+        }
+    }
+
+    function redirectToWa() {
+        const phone = "6285126450524";
+        const url = window.location.href;
+        const userText = document.getElementById('wa-text-input').value;
+        
+        let msg = `Halo Admin, saya mau lapor/request.%0A%0A`;
+        if(userText.trim() !== "") {
+            msg += `*Pesan:* ${userText}%0A%0A`;
+        }
+        msg += `*Link Video:* ${url}`;
+        
+        window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+        toggleWaModal();
+    }
+
+    // --- SERVER LOGIC ---
+    function toggleServerMenu() {
+        document.getElementById('server-list').classList.toggle('show');
+    }
+
+    document.addEventListener('click', function(e) {
+        const wrapper = document.getElementById('server-group');
+        const list = document.getElementById('server-list');
+        if (wrapper && !wrapper.contains(e.target)) {
+            list.classList.remove('show');
+        }
+    });
+
+    document.getElementById('wa-modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            toggleWaModal();
+        }
+    });
 
     const adList = [
         "https://otieu.com/4/10390860", 
@@ -373,75 +521,135 @@
         f: 'https://filemoon.sx/e/', st: 'https://streamtape.com/e/', md: 'https://mixdrop.co/e/',
         id: 'https://cdn.videy.co/', vip: 'https://bytt.jb-aiwei.cc/contents/videos/',
         tv: 'https://stream.kingbokep.video/', rs: 'https://t33.cdn2020.com/video/m3u8/',
-        im: 'https://t0.97img.com/'
+        im: 'https://t0.97img.com/',
+        bs: 'https://bysejikuar.com/e/'
     };
 
     let correctCode = Math.floor(1000 + Math.random() * 9000);
     document.getElementById('display-code').innerText = correctCode;
 
-    let targetVideoUrl = "";
-    let isNativeMode = false;
-    let mimeType = "";
+    // GLOBAL STATE
+    let activeVideoUrl = "";
+    let activeIsNative = false;
+    let activeMime = "";
+    let availableServers = [];
 
+    // --- INITIALIZE SERVERS FROM PARAMS ---
     (function initVideoLogic() {
         const params = new URLSearchParams(window.location.search);
-        const dlLink = document.getElementById('dl-link');
-
-        // --- DECODE BASE64 LINK DOWNLOAD ---
-        if (params.has('key')) { 
-            try {
-                let encoded = params.get('key');
-                let decodedLink = atob(encoded); 
-                dlLink.href = decodedLink;
-            } catch(e) { console.log("Error decoding link"); }
-        } else if (params.has('dl')) {
-            dlLink.href = params.get('dl');
-        }
-        // Tombol tetap hidden sampai unlock berhasil
+        let serverCount = 1;
 
         for (let key in playerBases) {
             if (params.has(key)) {
+                let u = "";
+                let isNative = false;
+                let mime = "";
+
                 if (key === 'id') { 
-                    isNativeMode = true; targetVideoUrl = playerBases[key] + params.get(key); mimeType = 'video/mp4'; 
+                    isNative = true; u = playerBases[key] + params.get(key); mime = 'video/mp4'; 
                 }
                 else if (key === 'vip' || key === 'rs' || key === 'tv' || key === 'im') { 
-                    isNativeMode = true; 
+                    isNative = true; 
                     let suffix = (key === 'tv') ? '/playlist.m3u8' : (key === 'im' ? '/a.m3u8' : '/index.m3u8');
-                    targetVideoUrl = playerBases[key] + params.get(key) + suffix; 
-                    mimeType = 'application/x-mpegURL'; 
+                    u = playerBases[key] + params.get(key) + suffix; 
+                    mime = 'application/x-mpegURL'; 
                 }
                 else {
-                    isNativeMode = false; targetVideoUrl = playerBases[key] + params.get(key);
-                    if (key === 'g') targetVideoUrl += '/preview';
-                    if (key === 'vz' || key === 'up') targetVideoUrl += '.html';
-                    if (key === 'db') targetVideoUrl += '?raw=1';
+                    isNative = false; u = playerBases[key] + params.get(key);
+                    if (key === 'g') u += '/preview';
+                    if (key === 'vz' || key === 'up') u += '.html';
+                    if (key === 'db') u += '?raw=1';
                 }
-                break;
+                
+                availableServers.push({
+                    name: "Server " + serverCount,
+                    url: u,
+                    isNative: isNative,
+                    mime: mime,
+                    id: serverCount
+                });
+                serverCount++;
+            }
+        }
+
+        if (availableServers.length > 0) {
+            setActiveServer(availableServers[0]);
+
+            if (availableServers.length > 1) {
+                const listEl = document.getElementById('server-list');
+                const groupEl = document.getElementById('server-group');
+                groupEl.style.display = 'block';
+
+                availableServers.forEach(srv => {
+                    const item = document.createElement('div');
+                    item.className = 'server-item';
+                    item.innerText = srv.name;
+                    item.onclick = function() {
+                        setActiveServer(srv);
+                        document.getElementById('server-list').classList.remove('show');
+                        
+                        document.querySelectorAll('.server-item').forEach(d => d.classList.remove('active'));
+                        item.classList.add('active');
+                        document.getElementById('current-server-name').innerText = srv.name;
+                        
+                        loadPlayerBackground();
+                    };
+                    listEl.appendChild(item);
+                });
+                
+                listEl.children[0].classList.add('active');
+                document.getElementById('current-server-name').innerText = availableServers[0].name;
             }
         }
     })();
 
+    function setActiveServer(srv) {
+        activeVideoUrl = srv.url;
+        activeIsNative = srv.isNative;
+        activeMime = srv.mime;
+    }
+
+    let plyrInstance = null;
+
     function loadPlayerBackground() {
-        if (isNativeMode) {
-            document.getElementById('embed-mount').style.display = 'none';
-            document.getElementById('native-player-wrapper').style.display = 'block';
-            const video = document.getElementById('player');
-            if (mimeType === 'application/x-mpegURL') {
+        const mount = document.getElementById('embed-mount');
+        const nativeWrap = document.getElementById('native-player-wrapper');
+        const videoEl = document.getElementById('player');
+
+        mount.innerHTML = '';
+        mount.style.display = 'none';
+        nativeWrap.style.display = 'none';
+        
+        if (plyrInstance) {
+            plyrInstance.destroy();
+            plyrInstance = null;
+        }
+
+        if (activeIsNative) {
+            nativeWrap.style.display = 'block';
+            
+            if (activeMime === 'application/x-mpegURL') {
                 if (Hls.isSupported()) {
-                    const hls = new Hls(); hls.loadSource(targetVideoUrl); hls.attachMedia(video);
-                    hls.on(Hls.Events.MANIFEST_PARSED, function() { initPlyr(video); });
-                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                    video.src = targetVideoUrl; initPlyr(video);
+                    const hls = new Hls(); 
+                    hls.loadSource(activeVideoUrl); 
+                    hls.attachMedia(videoEl);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() { initPlyr(videoEl); });
+                } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+                    videoEl.src = activeVideoUrl; initPlyr(videoEl);
                 }
-            } else { video.src = targetVideoUrl; initPlyr(video); }
+            } else { 
+                videoEl.src = activeVideoUrl; initPlyr(videoEl); 
+            }
         } else {
-            const mount = document.getElementById('embed-mount');
-            if (targetVideoUrl) { mount.innerHTML = `<iframe src="${targetVideoUrl}" allowfullscreen allow="autoplay" scrolling="no"></iframe>`; }
+            mount.style.display = 'block';
+            if (activeVideoUrl) { 
+                mount.innerHTML = `<iframe src="${activeVideoUrl}" allowfullscreen allow="autoplay" scrolling="no"></iframe>`; 
+            }
         }
     }
 
     function initPlyr(element) {
-        const player = new Plyr(element, {
+        plyrInstance = new Plyr(element, {
             controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
             autoplay: false 
         });
@@ -462,125 +670,66 @@
         if(socialAd) socialAd.remove();
     }
 
-    let adClickTime = 0;
+    // --- REVISED AD LOGIC (SIMPLE TIMESTAMP) ---
+    let adStartTime = 0;
     let isProcessRunning = false;
     let isUnlocked = false; 
-    let currentUnlockTarget = 'player'; 
     let visualInterval = null;
 
     function startSmartUnlock() {
         if(isUnlocked) return;
-        currentUnlockTarget = 'player';
-        startAdProcess();
-    }
-
-    function startAdProcess() {
+        
         window.open(adList[currentAdIndex], '_blank');
-        adClickTime = Date.now();
+        
+        adStartTime = Date.now();
         isProcessRunning = true;
         
         const btnPlayer = document.querySelector('.btn-unlock');
         const statusBox = document.getElementById('status-box');
-
-        if(currentUnlockTarget === 'player') {
-            statusBox.style.opacity = '1';
-            statusBox.className = "status-box status-waiting";
-            statusBox.innerHTML = `<svg class="animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>JANGAN TUTUP IKLAN...</span>`;
-            btnPlayer.disabled = true;
-        }
+        
+        statusBox.style.opacity = '1';
+        statusBox.className = "status-box status-waiting";
+        statusBox.innerHTML = `<svg class="animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>TUNGGU 8 DETIK...</span>`;
+        btnPlayer.disabled = true;
 
         let timeLeft = REQUIRED_DURATION;
         if(visualInterval) clearInterval(visualInterval);
 
         visualInterval = setInterval(() => {
             if(!isProcessRunning) { clearInterval(visualInterval); return; }
-            const isSplitScreen = (window.innerHeight < (window.screen.height * 0.65));
-            const isHidden = document.hidden;
-
-            let msg = "";
-            let color = "";
-
-            if (!isHidden || isSplitScreen) {
-                adClickTime = Date.now(); timeLeft = REQUIRED_DURATION; 
-                if(isSplitScreen) { msg = "GUNAKAN CHROME!"; color = "#ef4444"; }
-                else { msg = "TUNGGU DI TAB IKLAN..."; color = (currentUnlockTarget === 'player' ? "#0f172a" : "#fff"); }
-            } else {
-                timeLeft--; 
-                color = (currentUnlockTarget === 'player' ? "#0f172a" : "#fff");
-                if(timeLeft > 0) { msg = `MEMERIKSA... (${timeLeft})`; }
-                else { msg = "SILAKAN KEMBALI"; }
-            }
-
-            if(currentUnlockTarget === 'player') {
-                btnPlayer.style.color = color;
-                btnPlayer.innerHTML = `<span>${msg}</span>`;
-            }
         }, 1000);
     }
 
-    window.onpageshow = function(event) {
-        if (isProcessRunning) {
-            if (currentUnlockTarget === 'player' && isUnlocked) return;
-            const diffSeconds = Math.floor((Date.now() - adClickTime) / 1000);
-            if (diffSeconds >= (REQUIRED_DURATION - 1)) { handleUserReturn(); return; }
-        }
-        if (event.persisted && isProcessRunning) { handleFailState("back_button"); }
-    };
-
+    // TRIGGERED WHEN USER COMES BACK
     function handleUserReturn() {
-        if (document.hidden) return;
-        if (currentUnlockTarget === 'player' && isUnlocked) return;
+        if (!isProcessRunning) return;
+        if (isUnlocked) return;
 
-        const isSplitScreen = (window.innerHeight < (window.screen.height * 0.65));
-        if (isSplitScreen && isProcessRunning) { 
-            if(currentUnlockTarget==='player') document.querySelector('.btn-unlock').innerHTML = `<span>GANTI KE CHROME!</span>`; 
-            return; 
-        }
+        const now = Date.now();
+        const elapsed = (now - adStartTime) / 1000;
 
-        if (isProcessRunning) {
-            const diffSeconds = Math.floor((Date.now() - adClickTime) / 1000);
-            if (diffSeconds >= (REQUIRED_DURATION - 1)) {
-                isProcessRunning = false; clearInterval(visualInterval);
+        if (elapsed >= REQUIRED_DURATION) {
+            isProcessRunning = false;
+            isUnlocked = true;
+            clearInterval(visualInterval);
 
-                if(currentUnlockTarget === 'player') {
-                    isUnlocked = true;
-                    document.getElementById('status-box').className = "status-box status-success"; 
-                    document.getElementById('status-box').innerHTML = `<span>Terbuka!</span>`;
-                    const overlay = document.getElementById('ad-overlay-locker');
-                    overlay.style.opacity = '0';
-                    setTimeout(() => { overlay.style.display = 'none'; }, 500);
+            document.getElementById('status-box').className = "status-box status-success"; 
+            document.getElementById('status-box').innerHTML = `<span>Terbuka!</span>`;
+            const overlay = document.getElementById('ad-overlay-locker');
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 500);
 
-                    const cleanArea = document.getElementById('clean-ui-area');
-                    cleanArea.style.opacity = '0'; setTimeout(() => { cleanArea.style.display = 'none'; }, 500);
-                    const infoBadge = document.getElementById('device-msg');
-                    infoBadge.style.opacity = '0'; setTimeout(() => { infoBadge.style.display = 'none'; }, 500);
-                    const topAd = document.getElementById('social-bar-wrapper');
-                    if(topAd) { topAd.style.opacity = '0'; setTimeout(() => { topAd.remove(); }, 500); }
+            const cleanArea = document.getElementById('clean-ui-area');
+            cleanArea.style.opacity = '0'; setTimeout(() => { cleanArea.style.display = 'none'; }, 500);
+            const infoBadge = document.getElementById('device-msg');
+            infoBadge.style.opacity = '0'; setTimeout(() => { infoBadge.style.display = 'none'; }, 500);
+            const topAd = document.getElementById('social-bar-wrapper');
+            if(topAd) { topAd.style.opacity = '0'; setTimeout(() => { topAd.remove(); }, 500); }
 
-                    // --- MUNCULKAN TOMBOL DOWNLOAD JIKA LINK TERSEDIA ---
-                    const dlLink = document.getElementById('dl-link');
-                    if(dlLink.href && dlLink.href !== window.location.href + "#" && dlLink.href !== "") {
-                        dlLink.style.display = 'flex';
-                    }
-                }
-
-            } else { handleFailState("too_fast"); }
-        }
-    }
-
-    function handleFailState(reason) {
-        isProcessRunning = false; clearInterval(visualInterval); adClickTime = 0;
-        currentAdIndex = (currentAdIndex === 0) ? 1 : 0; 
-
-        if(currentUnlockTarget === 'player') {
-            const btn = document.querySelector('.btn-unlock');
-            const statusBox = document.getElementById('status-box');
-            statusBox.className = "status-box status-fail"; 
-            statusBox.innerHTML = (reason === "back_button") ? `<span>Terdeteksi tombol Kembali!</span>` : `<span>Gagal! Kamu kembali terlalu cepat.</span>`;
-            btn.disabled = false; btn.style.background = "#ef4444"; btn.style.color = "white";
-            btn.innerHTML = `<span>ULANGI (8s)</span>`;
-            document.querySelector('.locker-content').classList.add('shake-anim');
-            setTimeout(() => document.querySelector('.locker-content').classList.remove('shake-anim'), 500);
+        } else {
+            const btnPlayer = document.querySelector('.btn-unlock');
+            const remaining = Math.ceil(REQUIRED_DURATION - elapsed);
+            btnPlayer.innerHTML = `<span>SISA ${remaining} DETIK LAGI...</span>`;
         }
     }
 
