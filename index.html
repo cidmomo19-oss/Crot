@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Videy Premium</title>
 
-    <!-- === KONFIGURASI WARNA STATUS BAR (INIT) === -->
+    <!-- === KONFIGURASI WARNA STATUS BAR === -->
     <meta name="theme-color" id="meta-theme" content="#f8fafc">
 
     <!-- === LOGO CONFIGURATION === -->
@@ -15,7 +15,9 @@
     <meta property="og:description" content="Tonton video premium tanpa gangguan." />
     <meta property="og:image" content="https://i.ibb.co.com/SpVMhDf/Picsart-25-12-18-16-27-03-730-2.jpg" />
 
-    <!-- LIBRARY -->
+    <!-- LIBRARY (Crypto-JS Wajib Ada untuk AES) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -41,29 +43,25 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* --- DARK MODE CONFIGURATION (FIXED TEXT) --- */
+        /* --- DARK MODE CONFIGURATION --- */
         body.dark-mode { background-color: #050505; color: #e5e5e5; }
         body.dark-mode .device-badge { background: #2b0b0b; border-color: #450a0a; }
         
         /* Modal Dark Mode Fixes */
         body.dark-mode .wa-modal-content { background-color: #1e1e1e; border-color: #333; color: #fff; }
-        body.dark-mode .wa-modal-content h3 { color: #ffffff; } /* Judul Modal Putih */
-        
+        body.dark-mode .wa-modal-content h3 { color: #ffffff; } 
         body.dark-mode .step-num { background: #333; color: #fff; }
-        body.dark-mode .step-text { color: #d1d5db; } /* Teks step abu terang */
-        body.dark-mode .step-text strong { color: #ffffff; } /* Teks tebal putih */
-        
+        body.dark-mode .step-text { color: #d1d5db; }
+        body.dark-mode .step-text strong { color: #ffffff; }
         body.dark-mode textarea { background-color: #0f0f0f; border-color: #333; color: #fff; }
-        body.dark-mode .wa-input-label { color: #cbd5e1; } /* Label Input jadi terang */
-        
+        body.dark-mode .wa-input-label { color: #cbd5e1; }
         body.dark-mode .pass-wrapper { background: #0f0f0f; border-color: #333; }
-        body.dark-mode .pass-label { color: #cbd5e1; } /* Label Password jadi terang */
-        body.dark-mode .dl-pass { color: #60a5fa; } /* Password jadi biru terang */
-        
-        body.dark-mode .btn-wa-cancel { color: #e2e8f0; border-color: #475569; } /* Tombol Batal jadi terang */
+        body.dark-mode .pass-label { color: #cbd5e1; }
+        body.dark-mode .dl-pass { color: #60a5fa; }
+        body.dark-mode .btn-wa-cancel { color: #e2e8f0; border-color: #475569; }
         body.dark-mode .btn-wa-cancel:hover { background: #334155; }
 
-        /* WRAPPER (LANGSUNG TAMPIL) */
+        /* WRAPPER */
         #content-wrapper {
             width: 95%; max-width: 854px;
             display: flex; 
@@ -155,12 +153,7 @@
             position: relative;
         }
 
-        /* Group Left (Theme & WA & DL) */
-        .tools-left {
-            display: flex; 
-            gap: 5px; 
-            margin-right: auto;
-        }
+        .tools-left { display: flex; gap: 5px; margin-right: auto; }
 
         .btn-icon-only {
             width: 42px; height: 42px;
@@ -175,18 +168,10 @@
             text-decoration: none; 
         }
         
-        body.dark-mode .btn-icon-only {
-            background: #1e293b; border-color: #334155; color: #f8fafc;
-        }
-
+        body.dark-mode .btn-icon-only { background: #1e293b; border-color: #334155; color: #f8fafc; }
         .btn-icon-only:hover { transform: translateY(-2px); }
 
-        /* SERVER BUTTON & DROPDOWN */
-        .server-wrapper {
-            position: relative;
-            display: none; /* Default hidden */
-            margin-left: auto;
-        }
+        .server-wrapper { position: relative; display: none; margin-left: auto; }
         
         .btn-server {
             height: 42px; padding: 0 16px; border-radius: 10px;
@@ -196,13 +181,10 @@
             transition: all 0.2s;
         }
 
-        body.dark-mode .btn-server {
-            background: #1e293b; border-color: #334155; color: #f8fafc;
-        }
+        body.dark-mode .btn-server { background: #1e293b; border-color: #334155; color: #f8fafc; }
         
         .server-dropdown {
-            position: absolute;
-            top: 50px; right: 0;
+            position: absolute; top: 50px; right: 0;
             background: #fff; border: 1px solid #cbd5e1;
             border-radius: 10px; width: 140px;
             display: none; flex-direction: column;
@@ -211,11 +193,7 @@
         }
 
         .server-dropdown.show { display: flex; animation: fadeInDown 0.2s ease; }
-
-        .server-item {
-            padding: 10px 14px; font-size: 13px; font-weight: 600;
-            cursor: pointer; text-align: left; border-bottom: 1px solid #f1f5f9;
-        }
+        .server-item { padding: 10px 14px; font-size: 13px; font-weight: 600; cursor: pointer; text-align: left; border-bottom: 1px solid #f1f5f9; }
         .server-item:last-child { border-bottom: none; }
         .server-item:hover { background: #f8fafc; color: #2563eb; }
         .server-item.active { background: #eff6ff; color: #2563eb; }
@@ -225,12 +203,8 @@
         body.dark-mode .server-item:hover { background: #334155; color: #fff; }
         body.dark-mode .server-item.active { background: #1e3a8a; color: #fff; }
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ICON SWITCHER LOGIC */
         .icon-sun { display: none; }
         .icon-moon { display: block; }
         body.dark-mode .icon-sun { display: block; }
@@ -258,12 +232,10 @@
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
         .shake-anim { animation: shake 0.4s ease-in-out; }
 
-        /* --- MODAL STYLES (SHARED) --- */
+        /* --- MODAL STYLES --- */
         #wa-modal, #dl-modal {
-            display: none; /* Hidden by default */
-            position: fixed; inset: 0; z-index: 9999;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(4px);
+            display: none; position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px);
             align-items: center; justify-content: center;
             opacity: 0; transition: opacity 0.3s ease;
         }
@@ -271,23 +243,17 @@
 
         .wa-modal-content {
             background: #fff; width: 90%; max-width: 380px;
-            border-radius: 16px; padding: 24px;
-            border: 1px solid #e2e8f0;
+            border-radius: 16px; padding: 24px; border: 1px solid #e2e8f0;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             transform: scale(0.95); transition: transform 0.3s ease;
         }
         #wa-modal.open .wa-modal-content, #dl-modal.open .wa-modal-content { transform: scale(1); }
 
         .wa-step { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
-        .step-num { 
-            width: 24px; height: 24px; background: #f1f5f9; 
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            font-size: 12px; font-weight: 700; color: #475569; flex-shrink: 0;
-        }
+        .step-num { width: 24px; height: 24px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #475569; flex-shrink: 0; }
         .step-text { font-size: 13px; color: #334155; line-height: 1.5; text-align: left; }
         .step-text strong { color: #0f172a; }
 
-        /* New Request Input */
         .wa-input-area { margin-top: 15px; margin-bottom: 10px; }
         .wa-input-label { font-size: 12px; font-weight: 600; margin-bottom: 6px; display: block; color: #64748b; }
         .wa-textarea {
@@ -302,7 +268,6 @@
         .btn-wa-cancel { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: transparent; color: #64748b; font-weight: 600; font-size: 13px; cursor: pointer; }
         .btn-wa-go { flex: 1.5; padding: 10px; border-radius: 8px; border: none; background: #22c55e; color: #fff; font-weight: 600; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
-        /* DOWNLOAD SPECIFIC */
         .dl-box { margin: 15px 0; }
         .pass-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; margin-bottom: 5px; display: block; text-align: left; }
         
@@ -327,7 +292,7 @@
 
     </style>
 </head>
-<body data-version="v27.0-FIX-DARKMODE-TEXT">
+<body data-version="v29.0-HYBRID-DECODE">
 
 <!-- OVERLAY WARNING ADBLOCK -->
 <div id="adblock-warning">
@@ -379,7 +344,7 @@
     </div>
 </div>
 
-<!-- DOWNLOAD MODAL POPUP (LENGKAP + COPY PASS) -->
+<!-- DOWNLOAD MODAL POPUP -->
 <div id="dl-modal">
     <div class="wa-modal-content">
         <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
@@ -422,10 +387,7 @@
     </div>
 </div>
 
-
 <div id="content-wrapper">
-
-    <!-- INFO BADGE -->
     <div id="device-msg" class="clean-on-play">
         <div class="device-badge">
             <p class="text-[10px] text-red-600 uppercase tracking-wider font-bold mb-1 flex items-center justify-center gap-1">
@@ -440,12 +402,9 @@
     </div>
 
     <div class="player-container">
-        <!-- LOADING ANIMATION -->
         <div id="embed-loader">
             <div class="spinner"></div>
         </div>
-
-        <!-- OVERLAY LOCKER -->
         <div id="ad-overlay-locker">
             <div class="locker-content">
                 <div class="icon-circle">
@@ -461,9 +420,7 @@
                 <div id="status-box" class="status-box"></div>
             </div>
         </div>
-
         <div id="embed-mount" style="width:100%; height:100%;"></div>
-
         <div id="native-player-wrapper">
             <video id="player" playsinline controls>
                 <source src="" type="" />
@@ -471,50 +428,35 @@
         </div>
     </div>
 
-    <!-- TOOLS CONTAINER -->
     <div id="tools-container">
-        <!-- GRUP KIRI: TEMA & WA & DL -->
         <div class="tools-left">
-            <!-- Tombol Ganti Mode -->
             <button class="btn-icon-only" onclick="toggleTheme()" title="Ganti Mode">
                 <svg class="icon-moon" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                 <svg class="icon-sun" style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             </button>
-
-            <!-- Tombol WhatsApp (Icon Only) -->
             <button class="btn-icon-only" onclick="toggleWaModal()" title="Lapor Masalah">
                 <svg style="width:20px;height:20px;" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                 </svg>
             </button>
-
-            <!-- Tombol Download (ID PARAMETER, Hidden default) -->
-            <button id="btn-download-trigger" class="btn-icon-only" style="display:none;" onclick="toggleDlModal()" title="Download File">
+            <button id="btn-download-trigger" class="btn-icon-only" style="display:none;" onclick="handleDownloadClick()" title="Download File">
                 <svg style="width:20px;height:20px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
             </button>
         </div>
 
-        <!-- GRUP KANAN: SERVER (HANYA MUNCUL JIKA > 1 PARAMETER) -->
         <div id="server-group" class="server-wrapper">
             <button class="btn-server" onclick="toggleServerMenu()">
-                <svg style="width:18px;height:18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-                </svg>
+                <svg style="width:18px;height:18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" /></svg>
                 <span id="current-server-name">Server</span>
-                <svg style="width:14px;height:14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
+                <svg style="width:14px;height:14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
             </button>
-            <div id="server-list" class="server-dropdown">
-                <!-- List by JS -->
-            </div>
+            <div id="server-list" class="server-dropdown"></div>
         </div>
     </div>
 
     <div id="clean-ui-area" class="clean-on-play w-full flex flex-col items-center">
-        <!-- NATIVE AD -->
         <div id="native-ad-wrapper">
             <script async="async" data-cfasync="false" src="https://commonwealthgroovemadam.com/2259c8961aeea898328fa2ef52a93ed9/invoke.js"></script>
             <div id="container-2259c8961aeea898328fa2ef52a93ed9"></div>
@@ -539,73 +481,50 @@
             }, 100);
         } else { showAdBlockWarning(); }
     }
-
-    function showAdBlockWarning() {
-        document.getElementById('adblock-warning').style.display = 'flex';
-        document.body.style.overflow = 'hidden'; 
-    }
-
+    function showAdBlockWarning() { document.getElementById('adblock-warning').style.display = 'flex'; document.body.style.overflow = 'hidden'; }
     window.onload = function() { checkAdBlocker(); };
     
-    // --- TOGGLE THEME & STATUS BAR COLOR ---
+    // --- TOGGLE THEME ---
     function toggleTheme() {
         document.body.classList.toggle('dark-mode');
         const meta = document.getElementById('meta-theme');
-        if (document.body.classList.contains('dark-mode')) {
-            meta.setAttribute('content', '#050505'); // Match dark bg
-        } else {
-            meta.setAttribute('content', '#f8fafc'); // Match light bg
-        }
+        meta.setAttribute('content', document.body.classList.contains('dark-mode') ? '#050505' : '#f8fafc');
     }
 
-    // --- WA POPUP LOGIC ---
+    // --- MODAL LOGIC ---
     function toggleWaModal() {
         const modal = document.getElementById('wa-modal');
-        if (modal.classList.contains('open')) {
-            modal.classList.remove('open');
-            setTimeout(() => modal.style.display = 'none', 300);
-        } else {
-            modal.style.display = 'flex';
-            modal.offsetHeight; // force reflow
-            modal.classList.add('open');
-        }
+        if (modal.classList.contains('open')) { modal.classList.remove('open'); setTimeout(() => modal.style.display = 'none', 300); } 
+        else { modal.style.display = 'flex'; modal.offsetHeight; modal.classList.add('open'); }
     }
-
     function redirectToWa() {
         const phone = "6285126450524";
         const url = window.location.href;
         const userText = document.getElementById('wa-text-input').value;
-        
         let msg = `Halo Admin, saya mau lapor/request.%0A%0A`;
-        if(userText.trim() !== "") {
-            msg += `*Pesan:* ${userText}%0A%0A`;
-        }
+        if(userText.trim() !== "") { msg += `*Pesan:* ${userText}%0A%0A`; }
         msg += `*Link Video:* ${url}`;
-        
         window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
         toggleWaModal();
     }
 
-    // --- DOWNLOAD POPUP LOGIC ---
+    // --- DOWNLOAD LOGIC ---
     let finalDownloadLink = "";
+    let downloadType = ""; 
 
     function toggleDlModal() {
         const modal = document.getElementById('dl-modal');
-        if (modal.classList.contains('open')) {
-            modal.classList.remove('open');
-            setTimeout(() => modal.style.display = 'none', 300);
-        } else {
-            modal.style.display = 'flex';
-            modal.offsetHeight;
-            modal.classList.add('open');
-        }
+        if (modal.classList.contains('open')) { modal.classList.remove('open'); setTimeout(() => modal.style.display = 'none', 300); } 
+        else { modal.style.display = 'flex'; modal.offsetHeight; modal.classList.add('open'); }
+    }
+
+    function handleDownloadClick() {
+        if (downloadType === 'direct') { if(finalDownloadLink) window.open(finalDownloadLink, '_blank'); } 
+        else { toggleDlModal(); }
     }
 
     function processDownload() {
-        if(finalDownloadLink) {
-            window.open(finalDownloadLink, '_blank');
-            toggleDlModal();
-        }
+        if(finalDownloadLink) { window.open(finalDownloadLink, '_blank'); toggleDlModal(); }
     }
 
     function copyPassword() {
@@ -613,43 +532,25 @@
         navigator.clipboard.writeText(passText).then(() => {
             const btn = document.querySelector('.btn-copy-pass');
             const originalText = btn.innerText;
-            btn.innerText = "DISALIN!";
-            btn.classList.add('copied');
-            setTimeout(() => {
-                btn.innerText = originalText;
-                btn.classList.remove('copied');
-            }, 2000);
-        }).catch(err => {
-            console.error('Gagal menyalin', err);
+            btn.innerText = "DISALIN!"; btn.classList.add('copied');
+            setTimeout(() => { btn.innerText = originalText; btn.classList.remove('copied'); }, 2000);
         });
     }
 
-    // --- SERVER LOGIC ---
-    function toggleServerMenu() {
-        document.getElementById('server-list').classList.toggle('show');
-    }
-
+    // --- SERVER UI ---
+    function toggleServerMenu() { document.getElementById('server-list').classList.toggle('show'); }
     document.addEventListener('click', function(e) {
-        const wrapper = document.getElementById('server-group');
-        const list = document.getElementById('server-list');
-        if (wrapper && !wrapper.contains(e.target)) {
-            list.classList.remove('show');
+        if (document.getElementById('server-group') && !document.getElementById('server-group').contains(e.target)) {
+            document.getElementById('server-list').classList.remove('show');
         }
     });
-
-    // Close Modals on outside click
     window.onclick = function(event) {
-        const waModal = document.getElementById('wa-modal');
-        const dlModal = document.getElementById('dl-modal');
-        if (event.target == waModal) { toggleWaModal(); }
-        if (event.target == dlModal) { toggleDlModal(); }
+        if (event.target == document.getElementById('wa-modal')) toggleWaModal();
+        if (event.target == document.getElementById('dl-modal')) toggleDlModal();
     }
 
-    const adList = [
-        "https://otieu.com/4/10390860", 
-        "https://otieu.com/4/10379232" 
-    ];
-
+    // --- PLAYER CONFIG ---
+    const adList = ["https://otieu.com/4/10390860", "https://otieu.com/4/10379232"];
     let currentAdIndex = Math.floor(Math.random() * adList.length);
     const REQUIRED_DURATION = 8; 
 
@@ -657,51 +558,73 @@
         h: 'https://short.icu/', s: 'https://gradehgplus.com/e/', v: 'https://vidhidepre.com/v/',
         t: 'https://emturbovid.com/t/', d: 'https://dood.li/e/', o: 'https://voe.sx/e/',
         f: 'https://filemoon.sx/e/', st: 'https://streamtape.com/e/', md: 'https://mixdrop.co/e/',
-        vid: 'https://cdn.videy.co/', // GANTI 'id' LAMA JADI 'vid'
-        vip: 'https://bytt.jb-aiwei.cc/contents/videos/',
+        vid: 'https://cdn.videy.co/', vip: 'https://bytt.jb-aiwei.cc/contents/videos/',
         tv: 'https://stream.kingbokep.video/', rs: 'https://t33.cdn2020.com/video/m3u8/',
-        im: 'https://t0.97img.com/',
-        bs: 'https://bysejikuar.com/e/', lu: 'https://luluvid.com/e/',
+        im: 'https://t0.97img.com/', bs: 'https://bysejikuar.com/e/', lu: 'https://luluvid.com/e/',
         sr: 'https://streamruby.com/', ruby: 'https://streamruby.com/embed-',
     };
 
-    // GLOBAL STATE
     let activeVideoUrl = "";
     let activeIsNative = false;
     let activeMime = "";
     let availableServers = [];
 
-    // --- INITIALIZE SERVERS & DOWNLOAD PARAM ---
+    const SECRET_KEY = "VideyPremium2025"; 
+
+    // Helper Decrypt AES
+    function decryptAES(encryptedText) {
+        try {
+            const cleanText = encryptedText.replace(/ /g, '+');
+            const bytes = CryptoJS.AES.decrypt(cleanText, SECRET_KEY);
+            return bytes.toString(CryptoJS.enc.Utf8);
+        } catch (e) { console.error("Gagal decrypt AES", e); return null; }
+    }
+
+    // Helper Decode Base64
+    function decodeBase64(encodedText) {
+        try {
+            return atob(encodedText);
+        } catch (e) { console.error("Gagal decode Base64", e); return null; }
+    }
+
+    // --- INITIALIZE LOGIC ---
     (function initVideoLogic() {
         const params = new URLSearchParams(window.location.search);
         
-        // 1. Check Download Parameter 'id' (Base64 Encoded)
-        if (params.has('id')) {
-            const encodedDl = params.get('id');
-            try {
-                // Decode Base64 agar link asli tidak terbaca di URL
-                const decoded = atob(encodedDl);
-                if(decoded.includes('http')) {
-                    finalDownloadLink = decoded;
-                    document.getElementById('btn-download-trigger').style.display = 'flex';
-                }
-            } catch (e) {
-                console.log("Parameter 'id' bukan base64 valid");
+        // 1. Cek HTML (AES) -> Direct
+        if (params.has('html')) {
+            const result = decryptAES(params.get('html'));
+            if(result && result.includes('http')) {
+                finalDownloadLink = result;
+                downloadType = 'direct';
+            }
+        }
+        // 2. Cek CO (Base64) -> Direct
+        else if (params.has('co')) {
+            const result = decodeBase64(params.get('co'));
+            if(result && result.includes('http')) {
+                finalDownloadLink = result;
+                downloadType = 'direct';
+            }
+        }
+        // 3. Cek ID (Base64) -> Modal Popup
+        else if (params.has('id')) {
+            const result = decodeBase64(params.get('id'));
+            if(result && result.includes('http')) {
+                finalDownloadLink = result;
+                downloadType = 'modal';
             }
         }
 
-        // 2. Server Logic
+        // Server Logic
         let serverCount = 1;
-
         for (let key in playerBases) {
             if (params.has(key)) {
                 let u = "";
                 let isNative = false;
                 let mime = "";
 
-                if (key === 'vid') { // 'vid' ADALAH PENGGANTI 'id' UNTUK VIDEO
-                    isNative = true; u = playerBases[key] + params.get(key); mime = 'video/mp4'; 
-                }
+                if (key === 'vid') { isNative = true; u = playerBases[key] + params.get(key); mime = 'video/mp4'; }
                 else if (key === 'vip' || key === 'rs' || key === 'tv' || key === 'im') { 
                     isNative = true; 
                     let suffix = (key === 'tv') ? '/playlist.m3u8' : (key === 'im' ? '/a.m3u8' : '/index.m3u8');
@@ -710,30 +633,20 @@
                 }
                 else {
                     isNative = false; u = playerBases[key] + params.get(key);
-                    if (key === 'g') u += '/preview';
-                    if (key === 'vz' || key === 'up') u += '.html';
-                    if (key === 'db') u += '?raw=1';
+                    if (key === 'g') u += '/preview'; if (key === 'vz' || key === 'up') u += '.html'; if (key === 'db') u += '?raw=1';
                 }
                 
-                availableServers.push({
-                    name: "Server " + serverCount,
-                    url: u,
-                    isNative: isNative,
-                    mime: mime,
-                    id: serverCount
-                });
+                availableServers.push({ name: "Server " + serverCount, url: u, isNative: isNative, mime: mime, id: serverCount });
                 serverCount++;
             }
         }
 
         if (availableServers.length > 0) {
             setActiveServer(availableServers[0]);
-
             if (availableServers.length > 1) {
                 const listEl = document.getElementById('server-list');
                 const groupEl = document.getElementById('server-group');
                 groupEl.style.display = 'block';
-
                 availableServers.forEach(srv => {
                     const item = document.createElement('div');
                     item.className = 'server-item';
@@ -741,227 +654,130 @@
                     item.onclick = function() {
                         setActiveServer(srv);
                         document.getElementById('server-list').classList.remove('show');
-                        
                         document.querySelectorAll('.server-item').forEach(d => d.classList.remove('active'));
                         item.classList.add('active');
                         document.getElementById('current-server-name').innerText = srv.name;
-                        
-                        // JIKA SUDAH TERBUKA, LANGSUNG LOAD SAAT GANTI SERVER
-                        if(isUnlocked) {
-                             loadPlayerBackground();
-                        }
+                        if(isUnlocked) { loadPlayerBackground(); }
                     };
                     listEl.appendChild(item);
                 });
-                
                 listEl.children[0].classList.add('active');
                 document.getElementById('current-server-name').innerText = availableServers[0].name;
             }
         }
     })();
 
-    function setActiveServer(srv) {
-        activeVideoUrl = srv.url;
-        activeIsNative = srv.isNative;
-        activeMime = srv.mime;
-    }
+    function setActiveServer(srv) { activeVideoUrl = srv.url; activeIsNative = srv.isNative; activeMime = srv.mime; }
 
     let plyrInstance = null;
-
     function loadPlayerBackground() {
         const mount = document.getElementById('embed-mount');
         const nativeWrap = document.getElementById('native-player-wrapper');
         const videoEl = document.getElementById('player');
-        
-        // --- SHOW LOADER ANIMATION ---
         const loader = document.getElementById('embed-loader');
-        loader.style.display = 'flex';
-
-        mount.innerHTML = '';
-        mount.style.display = 'none';
-        nativeWrap.style.display = 'none';
         
-        if (plyrInstance) {
-            plyrInstance.destroy();
-            plyrInstance = null;
-        }
+        loader.style.display = 'flex';
+        mount.innerHTML = ''; mount.style.display = 'none'; nativeWrap.style.display = 'none';
+        
+        if (plyrInstance) { plyrInstance.destroy(); plyrInstance = null; }
 
         if (activeIsNative) {
             nativeWrap.style.display = 'block';
-            
-            // Function to hide loader when native video ready
             const onNativeReady = () => { loader.style.display = 'none'; };
-            
             if (activeMime === 'application/x-mpegURL') {
                 if (Hls.isSupported()) {
-                    const hls = new Hls(); 
-                    hls.loadSource(activeVideoUrl); 
-                    hls.attachMedia(videoEl);
-                    hls.on(Hls.Events.MANIFEST_PARSED, function() { 
-                        initPlyr(videoEl); 
-                        onNativeReady(); 
-                    });
+                    const hls = new Hls(); hls.loadSource(activeVideoUrl); hls.attachMedia(videoEl);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() { initPlyr(videoEl); onNativeReady(); });
                 } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
-                    videoEl.src = activeVideoUrl; 
-                    initPlyr(videoEl);
-                    videoEl.addEventListener('loadedmetadata', onNativeReady);
+                    videoEl.src = activeVideoUrl; initPlyr(videoEl); videoEl.addEventListener('loadedmetadata', onNativeReady);
                 }
             } else { 
-                videoEl.src = activeVideoUrl; 
-                initPlyr(videoEl); 
-                videoEl.addEventListener('loadeddata', onNativeReady);
+                videoEl.src = activeVideoUrl; initPlyr(videoEl); videoEl.addEventListener('loadeddata', onNativeReady);
             }
-            
-            // Fallback safety timeout if event never fires
             setTimeout(onNativeReady, 3000);
-
         } else {
             mount.style.display = 'block';
-            if (activeVideoUrl) { 
-                // Add ONLOAD event to iframe to hide loader
-                mount.innerHTML = `<iframe src="${activeVideoUrl}" allowfullscreen allow="autoplay" scrolling="no" onload="document.getElementById('embed-loader').style.display='none'"></iframe>`; 
-            }
+            if (activeVideoUrl) { mount.innerHTML = `<iframe src="${activeVideoUrl}" allowfullscreen allow="autoplay" scrolling="no" onload="document.getElementById('embed-loader').style.display='none'"></iframe>`; }
         }
     }
 
     function initPlyr(element) {
-        plyrInstance = new Plyr(element, {
-            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
-            autoplay: false 
-        });
-
+        plyrInstance = new Plyr(element, { controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'pip', 'fullscreen'], autoplay: false });
         if ('mediaSession' in navigator) {
-            navigator.mediaSession.metadata = new MediaMetadata({
-                title: document.title,
-                artist: 'Videy Premium',
-                album: 'Premium Player',
-                artwork: [{ src: 'https://i.ibb.co.com/SpVMhDf/Picsart-25-12-18-16-27-03-730-2.jpg', sizes: '512x512', type: 'image/jpeg' }]
-            });
+            navigator.mediaSession.metadata = new MediaMetadata({ title: document.title, artist: 'Videy Premium', album: 'Premium Player', artwork: [{ src: 'https://i.ibb.co.com/SpVMhDf/Picsart-25-12-18-16-27-03-730-2.jpg', sizes: '512x512', type: 'image/jpeg' }] });
         }
         element.pause();
     }
 
     function killSocialBar() {
         const socialAd = document.getElementById('social-bar-wrapper');
-        if(socialAd) {
-            socialAd.style.opacity = '0';
-            setTimeout(() => { socialAd.remove(); }, 500);
-        }
+        if(socialAd) { socialAd.style.opacity = '0'; setTimeout(() => { socialAd.remove(); }, 500); }
     }
 
-    // --- LOGIKA DUMMY BRIDGE (ANTI-HIJACK) & ANTI-CHEAT ---
-    let adStartTime = 0;
-    let isProcessRunning = false;
-    let isUnlocked = false; 
+    let adStartTime = 0; let isProcessRunning = false; let isUnlocked = false; 
 
-    // Function untuk membuka tab Jembatan (Dummy)
     function openSmartBridge(targetUrl) {
         let newWin = window.open("", "_blank");
         if (newWin) {
-            newWin.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Please Wait...</title>
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <style>body{background:#000;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;text-align:center;}</style>
-                </head>
-            <body>
-                <div style="font-size:20px;margin-bottom:10px;">⏳ Membuka Halaman Sponsor...</div>
-                <div style="font-size:14px;color:#aaa;">Jangan tutup halaman ini.</div>
-                <script>
-                    setTimeout(function() {
-                        window.location.href = "${targetUrl}";
-                    }, 500);
-                <\/script>
-            </body>
-            </html>
-        `);
-        newWin.document.close();
-    } else {
-        // Fallback jika popup blocker aktif
-        window.location.href = targetUrl; 
+            newWin.document.write(`<!DOCTYPE html><html><head><title>Please Wait...</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>body{background:#000;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;text-align:center;}</style></head><body><div style="font-size:20px;margin-bottom:10px;">⏳ Membuka Halaman Sponsor...</div><div style="font-size:14px;color:#aaa;">Jangan tutup halaman ini.</div><script>setTimeout(function() {window.location.href = "${targetUrl}";}, 500);<\/script></body></html>`);
+            newWin.document.close();
+        } else { window.location.href = targetUrl; }
     }
-}
 
-function startSmartUnlock() {
-    if(isUnlocked) return;
-    
-    // Panggil fungsi Jembatan
-    openSmartBridge(adList[currentAdIndex]);
-    
-    adStartTime = Date.now();
-    isProcessRunning = true;
-    
-    const btnPlayer = document.querySelector('.btn-unlock');
-    const statusBox = document.getElementById('status-box');
-    
-    statusBox.style.opacity = '1';
-    statusBox.className = "status-box status-waiting";
-    statusBox.innerHTML = `<svg class="animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>TUNGGU 8 DETIK...</span>`;
-    btnPlayer.disabled = true;
-}
-
-// LOGIKA ANTI-CHEAT (User dilarang balik sebelum waktunya)
-function handleUserReturn() {
-    if (!isProcessRunning) return; 
-    if (isUnlocked) return;
-
-    const now = Date.now();
-    const elapsed = (now - adStartTime) / 1000; 
-
-    if (elapsed >= REQUIRED_DURATION) {
-        // SUKSES
-        isProcessRunning = false;
-        isUnlocked = true;
-
-        document.getElementById('status-box').className = "status-box status-success"; 
-        document.getElementById('status-box').innerHTML = `<span>Terbuka!</span>`;
-        const overlay = document.getElementById('ad-overlay-locker');
-        overlay.style.opacity = '0';
-        setTimeout(() => { overlay.style.display = 'none'; }, 500);
-
-        const cleanArea = document.getElementById('clean-ui-area');
-        cleanArea.style.opacity = '0'; setTimeout(() => { cleanArea.style.display = 'none'; }, 500);
+    function startSmartUnlock() {
+        if(isUnlocked) return;
+        openSmartBridge(adList[currentAdIndex]);
+        adStartTime = Date.now(); isProcessRunning = true;
         
-        // HILANGKAN INFORMASI (Sesuai Request)
-        const infoBadge = document.getElementById('device-msg');
-        infoBadge.style.opacity = '0'; setTimeout(() => { infoBadge.style.display = 'none'; }, 500);
-        
-        killSocialBar();
-
-        // LOAD PLAYER (BARU LOAD SEKARANG)
-        loadPlayerBackground();
-
-    } else {
-        // GAGAL (Balik terlalu cepat)
-        isProcessRunning = false;
-        adStartTime = 0;
-
         const btnPlayer = document.querySelector('.btn-unlock');
         const statusBox = document.getElementById('status-box');
         
-        statusBox.className = "status-box status-fail";
-        statusBox.innerHTML = `<span>Gagal! Jangan kembali sebelum selesai.</span>`;
-        
-        btnPlayer.disabled = false;
-        btnPlayer.style.background = "#ef4444"; 
-        btnPlayer.style.color = "white";
-        btnPlayer.innerHTML = `<span>ULANGI (8s)</span>`;
-        
-        document.querySelector('.locker-content').classList.add('shake-anim');
-        setTimeout(() => document.querySelector('.locker-content').classList.remove('shake-anim'), 500);
+        statusBox.style.opacity = '1';
+        statusBox.className = "status-box status-waiting";
+        statusBox.innerHTML = `<svg class="animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>TUNGGU 8 DETIK...</span>`;
+        btnPlayer.disabled = true;
     }
-}
 
-document.addEventListener("visibilitychange", function() {
-    if (!document.hidden) {
-        handleUserReturn();
+    function handleUserReturn() {
+        if (!isProcessRunning) return; if (isUnlocked) return;
+        const now = Date.now(); const elapsed = (now - adStartTime) / 1000; 
+
+        if (elapsed >= REQUIRED_DURATION) {
+            isProcessRunning = false; isUnlocked = true;
+
+            document.getElementById('status-box').className = "status-box status-success"; 
+            document.getElementById('status-box').innerHTML = `<span>Terbuka!</span>`;
+            const overlay = document.getElementById('ad-overlay-locker');
+            overlay.style.opacity = '0'; setTimeout(() => { overlay.style.display = 'none'; }, 500);
+
+            const cleanArea = document.getElementById('clean-ui-area');
+            cleanArea.style.opacity = '0'; setTimeout(() => { cleanArea.style.display = 'none'; }, 500);
+            const infoBadge = document.getElementById('device-msg');
+            infoBadge.style.opacity = '0'; setTimeout(() => { infoBadge.style.display = 'none'; }, 500);
+            
+            killSocialBar();
+            loadPlayerBackground();
+
+            if (finalDownloadLink) { document.getElementById('btn-download-trigger').style.display = 'flex'; }
+
+        } else {
+            isProcessRunning = false; adStartTime = 0;
+            const btnPlayer = document.querySelector('.btn-unlock');
+            const statusBox = document.getElementById('status-box');
+            
+            statusBox.className = "status-box status-fail";
+            statusBox.innerHTML = `<span>Gagal! Jangan kembali sebelum selesai.</span>`;
+            btnPlayer.disabled = false;
+            btnPlayer.style.background = "#ef4444"; btnPlayer.style.color = "white";
+            btnPlayer.innerHTML = `<span>ULANGI (8s)</span>`;
+            
+            document.querySelector('.locker-content').classList.add('shake-anim');
+            setTimeout(() => document.querySelector('.locker-content').classList.remove('shake-anim'), 500);
+        }
     }
-});
 
-window.addEventListener("focus", handleUserReturn);
+    document.addEventListener("visibilitychange", function() { if (!document.hidden) handleUserReturn(); });
+    window.addEventListener("focus", handleUserReturn);
 </script>
-
 </body>
 </html>
