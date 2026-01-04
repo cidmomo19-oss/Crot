@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- PENTING: Memaksa browser mengirim domain asli -->
     <meta name="referrer" content="origin-when-cross-origin" />
 
     <meta name="monetag" content="709f22be9bd988b01ea4c3bd07423b0b">
@@ -312,10 +313,7 @@
     <button class="btn-refresh" onclick="location.reload()">SAYA SUDAH MATIKAN</button>
 </div>
 
-<!-- IKLAN ATAS -->
-<div id="social-bar-wrapper" class="clean-on-play">
-    <script type='text/javascript' src='//.com/d8/73/50/.js'></script>
-</div>
+<!-- IKLAN ATAS TELAH DIHAPUS SESUAI PERMINTAAN -->
 
 <!-- WA MODAL POPUP -->
 <div id="wa-modal">
@@ -427,7 +425,8 @@
         </div>
         <div id="embed-mount" style="width:100%; height:100%;"></div>
         <div id="native-player-wrapper">
-            <video id="player" playsinline controls>
+            <!-- MODIFIKASI: Menambahkan crossorigin="anonymous" -->
+            <video id="player" playsinline controls crossorigin="anonymous">
                 <source src="" type="" />
             </video>
         </div>
