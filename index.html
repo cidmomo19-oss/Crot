@@ -11,6 +11,9 @@
     
     <title>Videy Premium</title>
 
+    <!-- === IKLAN BARU (POSISI HEAD) === -->
+    <script src="https://quge5.com/88/tag.min.js" data-zone="200492" async data-cfasync="false"></script>
+
     <!-- === KONFIGURASI WARNA STATUS BAR === -->
     <meta name="theme-color" id="meta-theme" content="#f8fafc">
 
@@ -96,7 +99,7 @@
             position: absolute; inset: 0; 
             background: #000; 
             z-index: 15; 
-            display: none; 
+            display: flex; /* Default flex */
             align-items: center; justify-content: center;
         }
         .spinner {
@@ -267,10 +270,7 @@
 
     </style>
 </head>
-<body data-version="v29.0-HYBRID-DECODE">
-
-<!-- IKLAN PENGGANTI LOCKER -->
-<script src="https://quge5.com/88/tag.min.js" data-zone="200492" async data-cfasync="false"></script>
+<body data-version="v30.1-NO-LOCK-HEAD-AD">
 
 <!-- OVERLAY WARNING ADBLOCK -->
 <div id="adblock-warning">
@@ -375,15 +375,15 @@
     </div>
 
     <div class="player-container">
+        <!-- Spinner Default Visible -->
         <div id="embed-loader">
             <div class="spinner"></div>
         </div>
-        <!-- LOCKER REMOVED -->
         
-        <div id="embed-mount" style="width:100%; height:100%;"></div>
+        <div id="embed-mount" style="width:100%; height:100%; display:none;"></div>
         <div id="native-player-wrapper">
-            <!-- MODIFIKASI: Menambahkan crossorigin="anonymous" -->
-            <video id="player" playsinline controls crossorigin="anonymous">
+            <!-- MODIFIKASI: Crossorigin dan Playsinline -->
+            <video id="player" playsinline controls crossorigin="anonymous" preload="metadata">
                 <source src="" type="" />
             </video>
         </div>
@@ -530,7 +530,6 @@
 
     const SECRET_KEY = "VideyPremium2025"; 
 
-    // Helper Decrypt AES
     function decryptAES(encryptedText) {
         try {
             const cleanText = encryptedText.replace(/ /g, '+');
@@ -539,45 +538,39 @@
         } catch (e) { console.error("Gagal decrypt AES", e); return null; }
     }
 
-    // Helper Decode Base64
     function decodeBase64(encodedText) {
         try {
             return atob(encodedText);
         } catch (e) { console.error("Gagal decode Base64", e); return null; }
     }
 
+    function setActiveServer(srv) { 
+        activeVideoUrl = srv.url; 
+        activeIsNative = srv.isNative; 
+        activeMime = srv.mime; 
+    }
+
     // --- INITIALIZE LOGIC ---
-    (function initVideoLogic() {
+    document.addEventListener("DOMContentLoaded", function() {
         const params = new URLSearchParams(window.location.search);
         
-        // 1. Cek HTML (AES) -> Direct
+        // 1. Cek HTML/CO/ID untuk Download
         if (params.has('html')) {
             const result = decryptAES(params.get('html'));
-            if(result && result.includes('http')) {
-                finalDownloadLink = result;
-                downloadType = 'direct';
-            }
-        }
-        // 2. Cek CO (Base64) -> Direct
-        else if (params.has('co')) {
+            if(result && result.includes('http')) { finalDownloadLink = result; downloadType = 'direct'; }
+        } else if (params.has('co')) {
             const result = decodeBase64(params.get('co'));
-            if(result && result.includes('http')) {
-                finalDownloadLink = result;
-                downloadType = 'direct';
-            }
-        }
-        // 3. Cek ID (Base64) -> Modal Popup
-        else if (params.has('id')) {
+            if(result && result.includes('http')) { finalDownloadLink = result; downloadType = 'direct'; }
+        } else if (params.has('id')) {
             const result = decodeBase64(params.get('id'));
-            if(result && result.includes('http')) {
-                finalDownloadLink = result;
-                downloadType = 'modal';
-            }
+            if(result && result.includes('http')) { finalDownloadLink = result; downloadType = 'modal'; }
         }
         
-        if (finalDownloadLink) { document.getElementById('btn-download-trigger').style.display = 'flex'; }
+        if (finalDownloadLink) { 
+            document.getElementById('btn-download-trigger').style.display = 'flex'; 
+        }
 
-        // Server Logic
+        // 2. Server Logic
         let serverCount = 1;
         for (let key in playerBases) {
             if (params.has(key)) {
@@ -604,6 +597,8 @@
 
         if (availableServers.length > 0) {
             setActiveServer(availableServers[0]);
+            
+            // Build Menu
             if (availableServers.length > 1) {
                 const listEl = document.getElementById('server-list');
                 const groupEl = document.getElementById('server-group');
@@ -618,35 +613,47 @@
                         document.querySelectorAll('.server-item').forEach(d => d.classList.remove('active'));
                         item.classList.add('active');
                         document.getElementById('current-server-name').innerText = srv.name;
-                        loadPlayerBackground(); // Load immediately when server changes
+                        loadPlayerBackground(); 
                     };
                     listEl.appendChild(item);
                 });
                 listEl.children[0].classList.add('active');
                 document.getElementById('current-server-name').innerText = availableServers[0].name;
             }
-            // Load player immediately (No Lock)
+            
+            // Force Load Immediately
             loadPlayerBackground();
+        } else {
+             // Jika tidak ada parameter video, matikan spinner
+             document.getElementById('embed-loader').style.display = 'none';
         }
-    })();
-
-    function setActiveServer(srv) { activeVideoUrl = srv.url; activeIsNative = srv.isNative; activeMime = srv.mime; }
+    });
 
     let plyrInstance = null;
+    
     function loadPlayerBackground() {
         const mount = document.getElementById('embed-mount');
         const nativeWrap = document.getElementById('native-player-wrapper');
         const videoEl = document.getElementById('player');
         const loader = document.getElementById('embed-loader');
         
+        // Reset UI
         loader.style.display = 'flex';
-        mount.innerHTML = ''; mount.style.display = 'none'; nativeWrap.style.display = 'none';
+        mount.innerHTML = ''; 
+        mount.style.display = 'none'; 
+        nativeWrap.style.display = 'none';
         
+        // Kill Old Player
         if (plyrInstance) { plyrInstance.destroy(); plyrInstance = null; }
+
+        // Fallback safety: kill spinner after 3s if iframe hangs
+        setTimeout(() => { if(loader.style.display !== 'none') loader.style.display = 'none'; }, 3500);
 
         if (activeIsNative) {
             nativeWrap.style.display = 'block';
+            
             const onNativeReady = () => { loader.style.display = 'none'; };
+            
             if (activeMime === 'application/x-mpegURL') {
                 if (Hls.isSupported()) {
                     const hls = new Hls(); hls.loadSource(activeVideoUrl); hls.attachMedia(videoEl);
@@ -657,13 +664,26 @@
             } else { 
                 videoEl.src = activeVideoUrl; initPlyr(videoEl); videoEl.addEventListener('loadeddata', onNativeReady);
             }
-            // Fallback if events don't fire
-            setTimeout(onNativeReady, 3000);
+            // Ensure ready triggers
+            setTimeout(onNativeReady, 1000);
         } else {
             mount.style.display = 'block';
             if (activeVideoUrl) { 
-                // Using allow="autoplay" for compatibility but not forcing it in URL parameters to respect "jangan auto play"
-                mount.innerHTML = `<iframe src="${activeVideoUrl}" allowfullscreen allow="autoplay" scrolling="no" onload="document.getElementById('embed-loader').style.display='none'"></iframe>`; 
+                // Creating iframe
+                const iframe = document.createElement('iframe');
+                iframe.src = activeVideoUrl;
+                iframe.allowFullscreen = true;
+                iframe.setAttribute("allow", "autoplay; fullscreen");
+                iframe.style.width = "100%";
+                iframe.style.height = "100%";
+                iframe.style.border = "none";
+                
+                // Event listener for load
+                iframe.onload = function() {
+                    loader.style.display = 'none';
+                };
+                
+                mount.appendChild(iframe);
             }
         }
     }
@@ -671,22 +691,22 @@
     function initPlyr(element) {
         plyrInstance = new Plyr(element, { 
             controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'pip', 'fullscreen'], 
-            autoplay: false // Ensure no autoplay
+            autoplay: false,
+            clickToPlay: true
         });
         
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({ title: document.title, artist: 'Videy Premium', album: 'Premium Player', artwork: [{ src: 'https://i.ibb.co.com/SpVMhDf/Picsart-25-12-18-16-27-03-730-2.jpg', sizes: '512x512', type: 'image/jpeg' }] });
         }
         
-        // Hide UI clutter when user clicks play
         plyrInstance.on('play', function() {
-            document.querySelectorAll('.clean-on-play').forEach(el => el.style.opacity = '0');
-            setTimeout(() => {
-                document.querySelectorAll('.clean-on-play').forEach(el => el.style.display = 'none');
-            }, 500);
+            document.querySelectorAll('.clean-on-play').forEach(el => {
+                el.style.opacity = '0';
+                setTimeout(() => { el.style.display = 'none'; }, 500);
+            });
         });
 
-        element.pause(); // Force pause init
+        element.pause(); // Explicit pause
     }
 
 </script>
